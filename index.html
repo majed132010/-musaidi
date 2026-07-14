@@ -4,339 +4,218 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#f5c842">
+<meta name="theme-color" content="#075e54">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="مساعدي">
-<title>مساعدي — أبو أمجد</title>
+<title>مساعدي</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --gold: #f5c842;
-  --gold2: #ffd95a;
-  --gold3: #ffe98a;
-  --gold-dark: #c9a020;
-  --black: #0a0a0a;
-  --black2: #111111;
-  --black3: #1a1a1a;
-  --black4: #242424;
-  --text: #0a0a0a;
-  --text2: #2a2a2a;
-  --text3: #555555;
-  --border: rgba(245,200,66,0.2);
-  --border2: rgba(245,200,66,0.4);
-  --radius: 12px;
-  --nav-h: 64px;
-  --header-h: 52px;
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gd:#075e54;--gm:#128c7e;--gl:#25d366;--gp:#dcf8c6;
+  --bg:#ece5dd;--bgc:#e5ddd5;--w:#fff;
+  --t:#111;--t2:#555;--t3:#999;
+  --b:rgba(0,0,0,0.1);--r:10px;--nh:60px;--hh:56px;
 }
-html, body { height: 100%; overflow: hidden; }
-body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--black); color: var(--gold); display: flex; flex-direction: column; }
-::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 4px; }
+html,body{height:100%;overflow:hidden}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--t);display:flex;flex-direction:column}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:#ccc;border-radius:4px}
 
-/* ── Header ── */
-.header {
-  height: var(--header-h);
-  background: var(--black2);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  flex-shrink: 0;
-  z-index: 100;
-}
-.logo { display: flex; align-items: center; gap: 10px; }
-.logo-icon {
-  width: 32px; height: 32px;
-  background: var(--gold);
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 17px;
-}
-.logo-text { font-size: 16px; font-weight: 700; color: var(--gold); }
-.header-date { font-size: 11px; color: var(--gold-dark); background: var(--black3); border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; }
+.header{height:var(--hh);background:var(--gd);display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:var(--gl);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
+.logo-text{font-size:17px;font-weight:600;color:#fff}
+.hdate{font-size:11px;color:rgba(255,255,255,0.7)}
 
-/* ── Body ── */
-.app-body { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+.app-body{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.view{display:none;flex:1;flex-direction:column;overflow:hidden}
+.view.active{display:flex}
 
-/* ── Views ── */
-.view { display: none; flex: 1; flex-direction: column; overflow: hidden; height: 100%; }
-.view.active { display: flex; }
+.bnav{height:var(--nh);background:var(--w);border-top:1px solid var(--b);display:flex;align-items:center;justify-content:space-around;flex-shrink:0}
+.nbtn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;color:var(--t3);cursor:pointer;padding:8px 0;font-family:inherit}
+.nbtn.active{color:var(--gm)}
+.ni{font-size:22px}
+.nl{font-size:10px;font-weight:600}
 
-/* ── Bottom Nav ── */
-.bottom-nav {
-  height: var(--nav-h);
-  background: var(--black2);
-  border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  flex-shrink: 0;
-  z-index: 100;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-.nav-btn {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  border: none;
-  background: none;
-  color: #444;
-  cursor: pointer;
-  padding: 8px 0;
-  transition: color 0.2s;
-  font-family: inherit;
-}
-.nav-btn.active { color: var(--gold); }
-.nav-icon { font-size: 22px; }
-.nav-label { font-size: 10px; font-weight: 600; }
-.nav-btn.active .nav-icon { filter: drop-shadow(0 0 6px rgba(245,200,66,0.6)); }
+/* CHAT */
+.cv{background:var(--bgc)}
+.cm{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:4px}
+.cw{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:12px;padding:20px}
+.wcard{background:var(--w);border-radius:12px;padding:20px;text-align:center;max-width:280px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+.wi{font-size:48px;margin-bottom:8px}
+.wt{font-size:17px;font-weight:600;color:var(--t);margin-bottom:4px}
+.ws{font-size:13px;color:var(--t2);line-height:1.5}
+.sugs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+.sb{font-size:12px;padding:8px 14px;border-radius:20px;border:1.5px solid var(--gm);background:var(--w);color:var(--gm);cursor:pointer;font-family:inherit;font-weight:500}
+.sb:active{background:var(--gp)}
 
-/* ── CHAT (الرئيسية) ── */
-.chat-view { background: var(--black); }
-.chat-messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.chat-welcome {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  gap: 10px;
-  padding: 30px 20px;
-}
-.welcome-circle {
-  width: 80px; height: 80px;
-  background: var(--gold);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 40px;
-  margin-bottom: 8px;
-}
-.welcome-title { font-size: 22px; font-weight: 700; color: var(--gold); }
-.welcome-sub { font-size: 13px; color: #666; text-align: center; }
-.suggestions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 8px; }
-.sug-btn {
-  font-size: 12px;
-  padding: 8px 14px;
-  border-radius: 20px;
-  border: 1px solid var(--border2);
-  background: var(--black3);
-  color: var(--gold);
-  cursor: pointer;
-  font-family: inherit;
-  transition: all 0.15s;
-}
-.sug-btn:hover, .sug-btn:active { background: var(--gold); color: var(--black); }
+.mw{display:flex;flex-direction:column;margin:2px 0}
+.mw.u{align-items:flex-start}
+.mw.a{align-items:flex-end}
+.mb{max-width:78%;padding:8px 12px 6px;border-radius:8px;font-size:14px;line-height:1.5;white-space:pre-wrap;word-break:break-word;box-shadow:0 1px 1px rgba(0,0,0,0.1)}
+.mw.u .mb{background:var(--w);border-radius:0 8px 8px 8px;color:var(--t)}
+.mw.a .mb{background:var(--gp);border-radius:8px 0 8px 8px;color:var(--t)}
+.mw.tk .mb{background:var(--w);color:var(--t3);border-radius:0 8px 8px 8px}
+.mt{font-size:10px;color:var(--t3);margin-top:2px;padding:0 4px}
+.mw.a .mt{text-align:left}
+.dots{display:flex;gap:4px;padding:4px 2px}
+.dots span{width:7px;height:7px;background:var(--t3);border-radius:50%;animation:bo 1.2s infinite}
+.dots span:nth-child(2){animation-delay:.2s}
+.dots span:nth-child(3){animation-delay:.4s}
+@keyframes bo{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
 
-.msg { max-width: 80%; display: flex; flex-direction: column; gap: 3px; }
-.msg-user { align-self: flex-start; }
-.msg-ai { align-self: flex-end; }
-.msg-bubble { padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
-.msg-user .msg-bubble { background: var(--gold); color: var(--black); border-radius: 16px 16px 4px 16px; font-weight: 500; }
-.msg-ai .msg-bubble { background: var(--black3); border: 1px solid var(--border); color: var(--gold); border-radius: 16px 16px 16px 4px; }
-.msg-thinking .msg-bubble { background: var(--black3); border: 1px solid var(--border); color: #555; border-radius: 16px 16px 16px 4px; }
-.msg-time { font-size: 10px; color: #444; padding: 0 4px; }
-.msg-user .msg-time { text-align: right; }
+.cia{padding:8px 10px;background:var(--bg);display:flex;gap:8px;align-items:flex-end}
+.ci{flex:1;background:var(--w);border:none;border-radius:24px;padding:10px 16px;font-size:14px;font-family:inherit;color:var(--t);resize:none;outline:none;max-height:100px;line-height:1.5;box-shadow:0 1px 2px rgba(0,0,0,0.1)}
+.ci::placeholder{color:var(--t3)}
+.cs{width:44px;height:44px;background:var(--gm);border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
+.cs:disabled{opacity:.5}
 
-.chat-input-area {
-  padding: 10px 12px;
-  background: var(--black2);
-  border-top: 1px solid var(--border);
-  display: flex;
-  gap: 8px;
-  align-items: flex-end;
-}
-.chat-input {
-  flex: 1;
-  background: var(--black3);
-  border: 1px solid var(--border2);
-  border-radius: 20px;
-  padding: 10px 16px;
-  font-size: 14px;
-  font-family: inherit;
-  color: var(--gold);
-  resize: none;
-  outline: none;
-  max-height: 100px;
-  line-height: 1.5;
-}
-.chat-input::placeholder { color: #444; }
-.chat-input:focus { border-color: var(--gold); }
-.chat-send {
-  width: 40px; height: 40px;
-  background: var(--gold);
-  border: none;
-  border-radius: 50%;
-  color: var(--black);
-  font-size: 18px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  transition: all 0.15s;
-}
-.chat-send:disabled { opacity: 0.4; }
-.typing-dots { display: flex; gap: 4px; padding: 2px 0; }
-.typing-dots span { width: 6px; height: 6px; background: var(--gold-dark); border-radius: 50%; animation: bounce 1.2s infinite; }
-.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+/* TASKS */
+.tv{background:var(--w)}
+.thb{background:var(--gd);padding:10px 16px;flex-shrink:0}
+.thbt{color:#fff;font-size:14px;font-weight:600;margin-bottom:8px}
+.sr{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.sc{background:rgba(255,255,255,0.15);border-radius:8px;padding:10px 12px}
+.sl{font-size:10px;color:rgba(255,255,255,0.7);margin-bottom:3px}
+.sv{font-size:22px;font-weight:700;color:#fff}
+.ss{font-size:10px;color:rgba(255,255,255,0.6)}
+.tc{flex:1;overflow-y:auto;padding:12px}
+.tbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.ttl{font-size:13px;color:var(--t2)}
+.abtn{font-size:13px;padding:7px 16px;border-radius:20px;border:none;background:var(--gm);color:#fff;cursor:pointer;font-weight:600;font-family:inherit}
+.af{background:var(--w);border-radius:var(--r);padding:12px;margin-bottom:10px;display:none;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.af.visible{display:block}
+.af input,.af select{width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;font-family:inherit;background:#fff;color:var(--t);margin-bottom:8px;outline:none}
+.af input:focus,.af select:focus{border-color:var(--gm)}
+.fr{display:flex;gap:7px}
+.fr select{flex:1}
+.fb{display:flex;gap:7px;justify-content:flex-end}
+.bsv{padding:7px 16px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.bcl{padding:7px 12px;background:none;border:1px solid #ddd;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;color:var(--t2)}
+.ti{background:var(--w);border-radius:var(--r);padding:12px 14px;margin-bottom:6px;display:flex;align-items:flex-start;gap:10px;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.tck{width:20px;height:20px;border:2px solid #ddd;border-radius:50%;flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .15s}
+.tck.done{background:var(--gl);border-color:var(--gl);color:#fff;font-weight:700}
+.tcon{flex:1}
+.tit{font-size:14px;color:var(--t);margin-bottom:5px;line-height:1.4}
+.tit.done{text-decoration:line-through;color:var(--t3)}
+.tm{display:flex;gap:5px;flex-wrap:wrap}
+.tag{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}
+.th{background:#fde8e8;color:#c0392b}
+.tmd{background:#fef3cd;color:#856404}
+.tl{background:#d4edda;color:#155724}
+.tp{background:#e8f5e9;color:var(--gd)}
+.td{font-size:16px;color:#ccc;cursor:pointer;padding:2px 4px;flex-shrink:0}
 
-/* ── TASKS ── */
-.tasks-view { background: var(--black); }
-.stats-row { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; padding: 12px; flex-shrink: 0; }
-.stat-card { background: var(--black2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; }
-.stat-label { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-.stat-value { font-size: 24px; font-weight: 700; color: var(--gold); }
-.stat-sub { font-size: 10px; color: #444; margin-top: 2px; }
-.tasks-container { flex: 1; overflow-y: auto; padding: 0 12px 12px; }
-.tasks-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 0 10px; }
-.tasks-title { font-size: 13px; font-weight: 600; color: #555; }
-.add-btn { font-size: 12px; padding: 7px 14px; border-radius: 20px; border: 1px solid var(--border2); background: var(--gold); color: var(--black); cursor: pointer; font-weight: 600; font-family: inherit; }
-.add-form { background: var(--black2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 12px; margin-bottom: 10px; display: none; }
-.add-form.visible { display: block; }
-.add-form input, .add-form select { width: 100%; padding: 8px 12px; border: 1px solid var(--border2); border-radius: 8px; font-size: 13px; font-family: inherit; background: var(--black3); color: var(--gold); margin-bottom: 8px; outline: none; }
-.add-form input:focus, .add-form select:focus { border-color: var(--gold); }
-.add-form select option { background: var(--black3); }
-.form-row { display: flex; gap: 7px; }
-.form-row select { flex: 1; }
-.form-btns { display: flex; gap: 7px; justify-content: flex-end; }
-.btn-save { padding: 7px 16px; background: var(--gold); color: var(--black); border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
-.btn-cancel { padding: 7px 12px; background: none; border: 1px solid var(--border2); border-radius: 8px; font-size: 13px; cursor: pointer; font-family: inherit; color: #555; }
-.task-item { background: var(--black2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 10px; }
-.task-item:active { border-color: var(--gold); }
-.task-check { width: 20px; height: 20px; border: 2px solid var(--border2); border-radius: 6px; flex-shrink: 0; margin-top: 1px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; transition: all 0.15s; }
-.task-check.done { background: var(--gold); border-color: var(--gold); color: var(--black); font-weight: 700; }
-.task-content { flex: 1; }
-.task-title { font-size: 13.5px; font-weight: 500; color: var(--gold); margin-bottom: 6px; line-height: 1.4; }
-.task-title.done { text-decoration: line-through; color: #444; }
-.task-meta { display: flex; gap: 5px; flex-wrap: wrap; }
-.tag { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
-.tag-high { background: rgba(248,113,113,0.15); color: #f87171; }
-.tag-mid { background: rgba(251,191,36,0.15); color: #fbbf24; }
-.tag-low { background: rgba(52,211,153,0.15); color: #34d399; }
-.tag-project { background: rgba(245,200,66,0.15); color: var(--gold); }
-.task-del { font-size: 16px; color: #333; cursor: pointer; padding: 2px 4px; flex-shrink: 0; }
+/* GMAIL */
+.gv{background:var(--w)}
+.ghb{background:var(--gd);padding:10px 16px;flex-shrink:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.gb{font-size:12px;padding:6px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.4);background:rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-family:inherit}
+.gb.pr{background:var(--gl);border-color:var(--gl);color:#fff;font-weight:600}
+.gb.dr{background:rgba(255,100,100,0.2);border-color:rgba(255,100,100,0.5)}
+.gst{font-size:11px;color:rgba(255,255,255,0.6);margin-right:auto}
+.gc{color:var(--gl);font-weight:600}
+.el{flex:1;overflow-y:auto}
+.ei{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-bottom:1px solid #f0f0f0;cursor:pointer}
+.ei:active{background:#f5f5f5}
+.ei.ur{background:#f0faf0}
+.eck{width:18px;height:18px;border:1.5px solid #ddd;border-radius:4px;flex-shrink:0;margin-top:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px}
+.eck.ck{background:var(--gm);border-color:var(--gm);color:#fff}
+.av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;color:#fff}
+.ec{flex:1;min-width:0}
+.eh{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.ef{font-size:13.5px;font-weight:600;color:var(--t);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ei:not(.ur) .ef{font-weight:400;color:var(--t2)}
+.edt{font-size:11px;color:var(--t3);flex-shrink:0}
+.esj{font-size:12.5px;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.ei:not(.ur) .esj{color:var(--t2)}
+.esn{font-size:11.5px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ud{width:8px;height:8px;background:var(--gm);border-radius:50%;flex-shrink:0;margin-top:6px}
 
-/* ── GMAIL ── */
-.gmail-view { background: var(--black); }
-.gmail-toolbar { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--border); background: var(--black2); flex-shrink: 0; flex-wrap: wrap; }
-.gmail-btn { font-size: 12px; padding: 7px 12px; border-radius: 20px; border: 1px solid var(--border2); background: var(--black3); color: var(--gold); cursor: pointer; font-family: inherit; transition: all 0.15s; }
-.gmail-btn.primary { background: var(--gold); color: var(--black); border-color: var(--gold); font-weight: 600; }
-.gmail-btn.danger { background: rgba(248,113,113,0.1); color: #f87171; border-color: rgba(248,113,113,0.3); }
-.gmail-status { font-size: 11px; color: #444; margin-right: auto; }
-.gmail-connected { color: #34d399; }
-.emails-list { flex: 1; overflow-y: auto; }
-.email-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; position: relative; }
-.email-item:active { background: var(--black3); }
-.email-item.unread { background: rgba(245,200,66,0.04); }
-.email-check { width: 18px; height: 18px; border: 1.5px solid var(--border2); border-radius: 4px; flex-shrink: 0; margin-top: 3px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; }
-.email-check.checked { background: var(--gold); border-color: var(--gold); color: var(--black); font-weight: 700; }
-.email-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; color: var(--black); }
-.email-content { flex: 1; min-width: 0; }
-.email-header { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
-.email-from { font-size: 13px; font-weight: 600; color: var(--gold); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.email-item:not(.unread) .email-from { font-weight: 400; color: #555; }
-.email-date { font-size: 10px; color: #444; flex-shrink: 0; }
-.email-subject { font-size: 12px; color: var(--gold); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
-.email-item:not(.unread) .email-subject { color: #555; }
-.email-snippet { font-size: 11px; color: #444; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.email-unread-dot { width: 7px; height: 7px; background: var(--gold); border-radius: 50%; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); }
+.ed{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--w);z-index:200;display:none;flex-direction:column}
+.ed.vis{display:flex}
+.edh{background:var(--gd);padding:12px 16px;flex-shrink:0}
+.edb{display:flex;align-items:center;gap:6px;font-size:13px;color:#fff;cursor:pointer;background:none;border:none;margin-bottom:10px;font-family:inherit}
+.eds{font-size:15px;font-weight:600;color:#fff;margin-bottom:6px;line-height:1.3}
+.edf{font-size:12px;color:rgba(255,255,255,0.7);margin-bottom:8px}
+.eda{display:flex;gap:6px}
+.ebody{flex:1;overflow-y:auto;padding:16px;font-size:14px;line-height:1.7;color:var(--t2)}
 
-.email-detail { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--black); z-index: 200; display: none; flex-direction: column; }
-.email-detail.visible { display: flex; }
-.email-detail-header { padding: 14px 16px; border-bottom: 1px solid var(--border); background: var(--black2); flex-shrink: 0; }
-.email-detail-back { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--gold); cursor: pointer; background: none; border: none; margin-bottom: 10px; font-family: inherit; }
-.email-detail-subject { font-size: 16px; font-weight: 700; color: var(--gold); margin-bottom: 8px; line-height: 1.3; }
-.email-detail-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.email-detail-from { font-size: 12px; color: #666; flex: 1; }
-.email-detail-date { font-size: 11px; color: #444; }
-.email-detail-actions { display: flex; gap: 6px; margin-top: 8px; }
-.email-detail-body { flex: 1; overflow-y: auto; padding: 16px; font-size: 13.5px; line-height: 1.7; color: #888; }
+.cm2{position:fixed;bottom:calc(var(--nh) + 8px);left:10px;right:10px;background:var(--w);border-radius:14px;z-index:300;display:none;flex-direction:column;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.2)}
+.cm2.vis{display:flex}
+.cmh{padding:14px 16px;background:var(--gd);display:flex;align-items:center;justify-content:space-between}
+.cmt{font-size:14px;font-weight:600;color:#fff}
+.cmc{background:none;border:none;color:#fff;cursor:pointer;font-size:20px}
+.cmf{padding:10px 14px;border-bottom:1px solid #eee;display:flex;flex-direction:column;gap:6px}
+.cmfi{display:flex;align-items:center;gap:8px;border-bottom:1px solid #f0f0f0;padding:4px 0}
+.cmfi:last-child{border:none}
+.cmfl{font-size:12px;color:var(--t2);width:32px;flex-shrink:0}
+.cmfi input{flex:1;background:none;border:none;outline:none;font-size:13px;font-family:inherit;color:var(--t);padding:4px 0}
+.cmb{min-height:120px;padding:12px 14px;outline:none;font-size:14px;font-family:inherit;color:var(--t);line-height:1.6}
+.cmb:empty:before{content:attr(data-placeholder);color:var(--t3)}
+.cmft{padding:10px 14px;border-top:1px solid #eee;display:flex;gap:8px;justify-content:flex-end}
 
-.compose-modal { position: fixed; bottom: calc(var(--nav-h) + 8px); left: 12px; right: 12px; background: var(--black2); border: 1px solid var(--border2); border-radius: 16px; z-index: 300; display: none; flex-direction: column; overflow: hidden; box-shadow: 0 -10px 40px rgba(245,200,66,0.1); }
-.compose-modal.visible { display: flex; }
-.compose-header { padding: 12px 16px; background: var(--gold); display: flex; align-items: center; justify-content: space-between; }
-.compose-title { font-size: 14px; font-weight: 700; color: var(--black); }
-.compose-close { background: none; border: none; color: var(--black); cursor: pointer; font-size: 20px; font-weight: 700; }
-.compose-fields { padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; }
-.compose-field { display: flex; align-items: center; gap: 8px; }
-.compose-field-label { font-size: 11px; color: #555; width: 32px; flex-shrink: 0; }
-.compose-field input { flex: 1; background: none; border: none; outline: none; font-size: 13px; font-family: inherit; color: var(--gold); padding: 4px 0; }
-.compose-field input::placeholder { color: #333; }
-.compose-body { min-height: 120px; padding: 12px 14px; outline: none; font-size: 13px; font-family: inherit; color: var(--gold); line-height: 1.6; }
-.compose-body:empty:before { content: attr(data-placeholder); color: #333; }
-.compose-footer { padding: 10px 14px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; }
-
-.empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #333; gap: 10px; padding: 40px; }
-.empty-state-icon { font-size: 48px; }
-.empty-state p { font-size: 13px; text-align: center; color: #444; }
+.es{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--t3);gap:10px;padding:40px}
+.esi{font-size:52px}
+.es p{font-size:13px;text-align:center}
 </style>
 </head>
 <body>
 
-<!-- Header -->
 <div class="header">
   <div class="logo">
     <div class="logo-icon">🤖</div>
     <span class="logo-text">مساعدي</span>
   </div>
-  <div class="header-date" id="date-badge"></div>
+  <div class="hdate" id="hdate"></div>
 </div>
 
-<!-- App Body -->
 <div class="app-body">
 
-  <!-- CHAT VIEW -->
-  <div class="view chat-view active" id="view-chat">
-    <div class="chat-messages" id="chat-messages">
-      <div class="chat-welcome">
-        <div class="welcome-circle">🤖</div>
-        <div class="welcome-title">مرحباً أبو أمجد</div>
-        <div class="welcome-sub">مساعدك الشخصي — اسألني أي شيء</div>
-        <div class="suggestions">
-          <button class="sug-btn" onclick="sendSug('ما أولويات اليوم؟')">أولويات اليوم</button>
-          <button class="sug-btn" onclick="sendSug('آخر تحديثات الأرض؟')">تحديثات الأرض</button>
-          <button class="sug-btn" onclick="sendSug('كم مهمة متبقية؟')">المهام المتبقية</button>
-          <button class="sug-btn" onclick="sendSug('ساعدني في مشكلة تقنية')">مشكلة تقنية</button>
+  <!-- CHAT -->
+  <div class="view cv active" id="view-chat">
+    <div class="cm" id="chat-msgs">
+      <div class="cw">
+        <div class="wcard">
+          <div class="wi">🤖</div>
+          <div class="wt">مرحباً أبو أمجد</div>
+          <div class="ws">مساعدك الشخصي الذكي</div>
+          <div class="sugs">
+            <button class="sb" onclick="sendSug('ما أولويات اليوم؟')">أولويات اليوم</button>
+            <button class="sb" onclick="sendSug('آخر تحديثات الأرض؟')">تحديثات الأرض</button>
+            <button class="sb" onclick="sendSug('كم مهمة متبقية؟')">المهام المتبقية</button>
+            <button class="sb" onclick="sendSug('ساعدني في مشكلة تقنية')">مشكلة تقنية</button>
+          </div>
         </div>
       </div>
     </div>
-    <div class="chat-input-area">
-      <textarea class="chat-input" id="chat-input" placeholder="اكتب رسالة..." rows="1"
+    <div class="cia">
+      <textarea class="ci" id="ci" placeholder="اكتب رسالة..." rows="1"
         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"
         oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
-      <button class="chat-send" id="chat-send-btn" onclick="sendChat()">↑</button>
+      <button class="cs" id="csbtn" onclick="sendChat()">↑</button>
     </div>
   </div>
 
-  <!-- TASKS VIEW -->
-  <div class="view tasks-view" id="view-tasks">
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-label">إجمالي</div><div class="stat-value" id="stat-total">0</div><div class="stat-sub">المهام</div></div>
-      <div class="stat-card"><div class="stat-label">مكتملة</div><div class="stat-value" id="stat-done">0</div><div class="stat-sub" id="stat-pct">0%</div></div>
-      <div class="stat-card"><div class="stat-label">عالية الأولوية</div><div class="stat-value" id="stat-high">0</div><div class="stat-sub">تحتاج انتباه</div></div>
-      <div class="stat-card"><div class="stat-label">متبقية</div><div class="stat-value" id="stat-pending">0</div><div class="stat-sub">غير مكتملة</div></div>
-    </div>
-    <div class="tasks-container">
-      <div class="tasks-header">
-        <div class="tasks-title">كل المهام</div>
-        <button class="add-btn" onclick="toggleForm()">+ مهمة</button>
+  <!-- TASKS -->
+  <div class="view tv" id="view-tasks">
+    <div class="thb">
+      <div class="thbt">المهام</div>
+      <div class="sr">
+        <div class="sc"><div class="sl">إجمالي</div><div class="sv" id="s-total">0</div><div class="ss">مهمة</div></div>
+        <div class="sc"><div class="sl">مكتملة</div><div class="sv" id="s-done">0</div><div class="ss" id="s-pct">0%</div></div>
+        <div class="sc"><div class="sl">عالية الأولوية</div><div class="sv" id="s-high">0</div><div class="ss">تحتاج انتباه</div></div>
+        <div class="sc"><div class="sl">متبقية</div><div class="sv" id="s-pend">0</div><div class="ss">غير مكتملة</div></div>
       </div>
-      <div class="add-form" id="add-form">
-        <input type="text" id="task-input" placeholder="اكتب المهمة..." />
-        <div class="form-row">
-          <select id="task-project">
+    </div>
+    <div class="tc">
+      <div class="tbar">
+        <div class="ttl">كل المهام</div>
+        <button class="abtn" onclick="toggleForm()">+ مهمة</button>
+      </div>
+      <div class="af" id="af">
+        <input type="text" id="ti" placeholder="اكتب المهمة..." />
+        <div class="fr">
+          <select id="tpr">
             <option value="الأرض">الأرض</option>
             <option value="عوالم">عوالم</option>
             <option value="بنك المعلومات">بنك المعلومات</option>
@@ -345,93 +224,75 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--black);
             <option value="مساعدي">مساعدي</option>
             <option value="شخصي">شخصي</option>
           </select>
-          <select id="task-priority">
+          <select id="tpi">
             <option value="high">عالية</option>
             <option value="mid">متوسطة</option>
             <option value="low">منخفضة</option>
           </select>
         </div>
-        <div class="form-btns">
-          <button class="btn-cancel" onclick="toggleForm()">إلغاء</button>
-          <button class="btn-save" onclick="addTask()">حفظ</button>
+        <div class="fb">
+          <button class="bcl" onclick="toggleForm()">إلغاء</button>
+          <button class="bsv" onclick="addTask()">حفظ</button>
         </div>
       </div>
-      <div id="tasks-list"></div>
+      <div id="tlist"></div>
     </div>
   </div>
 
-  <!-- GMAIL VIEW -->
-  <div class="view gmail-view" id="view-gmail" style="position:relative">
-    <div class="gmail-toolbar">
-      <button class="gmail-btn primary" id="gmail-auth-btn" onclick="gmailSignIn()">🔑 تسجيل الدخول</button>
-      <button class="gmail-btn" id="gmail-refresh-btn" onclick="loadEmails()" style="display:none">🔄 تحديث</button>
-      <button class="gmail-btn" id="gmail-compose-btn" onclick="openCompose()" style="display:none">✏️ إنشاء</button>
-      <button class="gmail-btn danger" id="gmail-delete-btn" onclick="deleteSelected()" style="display:none">🗑️ حذف</button>
-      <span class="gmail-status" id="gmail-status">غير مرتبط</span>
+  <!-- GMAIL -->
+  <div class="view gv" id="view-gmail" style="position:relative">
+    <div class="ghb">
+      <button class="gb pr" id="gauthbtn" onclick="gmailSignIn()">🔑 تسجيل الدخول</button>
+      <button class="gb" id="grefbtn" onclick="loadEmails()" style="display:none">🔄 تحديث</button>
+      <button class="gb" id="gcmpbtn" onclick="openCompose()" style="display:none">✏️ إنشاء</button>
+      <button class="gb dr" id="gdelbtn" onclick="deleteSelected()" style="display:none">🗑️ حذف</button>
+      <span class="gst" id="gstat">غير مرتبط</span>
     </div>
-    <div class="emails-list" id="emails-container">
-      <div class="empty-state">
-        <div class="empty-state-icon">📧</div>
-        <p>سجّل دخولك لعرض رسائلك</p>
-      </div>
+    <div class="el" id="econt">
+      <div class="es"><div class="esi">📧</div><p>سجّل دخولك لعرض رسائلك</p></div>
     </div>
-    <div class="email-detail" id="email-detail">
-      <div class="email-detail-header">
-        <button class="email-detail-back" onclick="closeEmailDetail()">← رجوع</button>
-        <div class="email-detail-subject" id="detail-subject"></div>
-        <div class="email-detail-meta">
-          <div class="email-detail-from" id="detail-from"></div>
-          <div class="email-detail-date" id="detail-date"></div>
-        </div>
-        <div class="email-detail-actions">
-          <button class="gmail-btn" onclick="replyEmail()">↩️ رد</button>
-          <button class="gmail-btn danger" onclick="deleteCurrentEmail()">🗑️ حذف</button>
+    <div class="ed" id="edet">
+      <div class="edh">
+        <button class="edb" onclick="closeED()">← رجوع</button>
+        <div class="eds" id="dsubj"></div>
+        <div class="edf" id="dfrom"></div>
+        <div class="eda">
+          <button class="gb" onclick="replyEmail()">↩️ رد</button>
+          <button class="gb dr" onclick="delCurEmail()">🗑️ حذف</button>
         </div>
       </div>
-      <div class="email-detail-body" id="detail-body"></div>
+      <div class="ebody" id="dbody"></div>
     </div>
   </div>
 
 </div>
 
 <!-- Bottom Nav -->
-<div class="bottom-nav">
-  <button class="nav-btn active" onclick="switchView('chat',this)">
-    <span class="nav-icon">💬</span>
-    <span class="nav-label">الدردشة</span>
-  </button>
-  <button class="nav-btn" onclick="switchView('tasks',this)">
-    <span class="nav-icon">✅</span>
-    <span class="nav-label">المهام</span>
-  </button>
-  <button class="nav-btn" onclick="switchView('gmail',this)">
-    <span class="nav-icon">📧</span>
-    <span class="nav-label">Gmail</span>
-  </button>
+<div class="bnav">
+  <button class="nbtn active" onclick="sv('chat',this)"><span class="ni">💬</span><span class="nl">الدردشة</span></button>
+  <button class="nbtn" onclick="sv('tasks',this)"><span class="ni">✅</span><span class="nl">المهام</span></button>
+  <button class="nbtn" onclick="sv('gmail',this)"><span class="ni">📧</span><span class="nl">Gmail</span></button>
 </div>
 
 <!-- Compose -->
-<div class="compose-modal" id="compose-modal">
-  <div class="compose-header">
-    <span class="compose-title">رسالة جديدة</span>
-    <button class="compose-close" onclick="closeCompose()">✕</button>
+<div class="cm2" id="comp">
+  <div class="cmh"><span class="cmt">رسالة جديدة</span><button class="cmc" onclick="closeCompose()">✕</button></div>
+  <div class="cmf">
+    <div class="cmfi"><span class="cmfl">إلى</span><input type="email" id="cto" placeholder="example@gmail.com"/></div>
+    <div class="cmfi"><span class="cmfl">موضوع</span><input type="text" id="csub" placeholder="موضوع الرسالة"/></div>
   </div>
-  <div class="compose-fields">
-    <div class="compose-field"><span class="compose-field-label">إلى</span><input type="email" id="compose-to" placeholder="example@gmail.com" /></div>
-    <div class="compose-field"><span class="compose-field-label">موضوع</span><input type="text" id="compose-subject" placeholder="موضوع الرسالة" /></div>
-  </div>
-  <div class="compose-body" id="compose-body" contenteditable="true" data-placeholder="اكتب رسالتك..."></div>
-  <div class="compose-footer">
-    <button class="btn-cancel" onclick="closeCompose()">إلغاء</button>
-    <button class="btn-save" onclick="sendEmail()">إرسال ✉️</button>
+  <div class="cmb" id="cbody" contenteditable="true" data-placeholder="اكتب رسالتك..."></div>
+  <div class="cmft">
+    <button class="bcl" onclick="closeCompose()">إلغاء</button>
+    <button class="bsv" onclick="sendEmail()">إرسال ✉️</button>
   </div>
 </div>
 
 <script src="https://accounts.google.com/gsi/client" async></script>
 <script>
-const GOOGLE_CLIENT_ID = '498546452069-rptoquk5iio9699psetipnidvaac8g5t.apps.googleusercontent.com';
-const GMAIL_SCOPES = 'https://www.googleapis.com/auth/gmail.modify';
-const PROJECTS_INFO = `أنت مساعد شخصي لأبو أمجد، مطور عربي مستقل يعمل على:
+const GID='498546452069-rptoquk5iio9699psetipnidvaac8g5t.apps.googleusercontent.com';
+const GSCOPE='https://www.googleapis.com/auth/gmail.modify';
+const SYS=`أنت مساعد شخصي لأبو أمجد، مطور عربي مستقل يعمل على:
 1. الأرض: لعبة تنافسية (React+FastAPI+MongoDB) - 5800+ سؤال
 2. عوالم: تطبيق اجتماعي Discord-like (Firebase+Agora)
 3. بنك المعلومات: لعبة أسئلة وأجوبة (Firebase+WebRTC)
@@ -440,183 +301,161 @@ const PROJECTS_INFO = `أنت مساعد شخصي لأبو أمجد، مطور �
 6. مساعدي: مدير مهام + مساعد ذكي + Gmail
 أجب بالعربية بشكل مختصر وعملي.`;
 
-let API_KEY = localStorage.getItem('claude_key') || '';
-let tasks = JSON.parse(localStorage.getItem('musaidi_tasks') || '[]');
-let chatHistory = [];
-let gmailToken = null;
-let emails = [];
-let selectedEmails = new Set();
-let currentEmailId = null;
+let AK=localStorage.getItem('claude_key')||'';
+let tasks=JSON.parse(localStorage.getItem('musaidi_tasks')||'[]');
+let hist=[],gTok=null,emails=[],selE=new Set(),curEid=null;
 
-if (!tasks.length) {
-  tasks = [
-    { id:1, title:'نقل metadata الفئات السبع إلى EXTRA_CATEGORIES', project:'الأرض', priority:'high', done:false },
-    { id:2, title:'إصلاح bug الـ #contentArea في عوالم', project:'عوالم', priority:'mid', done:false },
-    { id:3, title:'اختبار Agora بعد تغيير الشهادة', project:'الأرض', priority:'mid', done:false },
-    { id:4, title:'تجربة قنوات يوتيوب الـ 13 الجديدة', project:'ULTRAS HUB', priority:'low', done:false },
-    { id:5, title:'ربط Gmail بمساعدي', project:'مساعدي', priority:'high', done:true },
-  ];
-  saveTasks();
-}
+if(!tasks.length){tasks=[
+  {id:1,title:'نقل metadata الفئات السبع إلى EXTRA_CATEGORIES',project:'الأرض',priority:'high',done:false},
+  {id:2,title:'إصلاح bug الـ #contentArea في عوالم',project:'عوالم',priority:'mid',done:false},
+  {id:3,title:'اختبار Agora بعد تغيير الشهادة',project:'الأرض',priority:'mid',done:false},
+  {id:4,title:'تجربة قنوات يوتيوب الـ 13 الجديدة',project:'ULTRAS HUB',priority:'low',done:false},
+  {id:5,title:'ربط Gmail بمساعدي',project:'مساعدي',priority:'high',done:true},
+];save();}
 
-function saveTasks() { localStorage.setItem('musaidi_tasks', JSON.stringify(tasks)); }
-
-function renderTasks() {
-  const list = document.getElementById('tasks-list');
-  if (!tasks.length) { list.innerHTML='<div style="text-align:center;color:#333;padding:40px;font-size:13px">لا توجد مهام</div>'; return; }
-  list.innerHTML = tasks.map(t=>`
-    <div class="task-item">
-      <div class="task-check ${t.done?'done':''}" onclick="toggleTask(${t.id})">${t.done?'✓':''}</div>
-      <div class="task-content">
-        <div class="task-title ${t.done?'done':''}">${t.title}</div>
-        <div class="task-meta">
-          <span class="tag tag-project">${t.project}</span>
-          <span class="tag ${t.priority==='high'?'tag-high':t.priority==='mid'?'tag-mid':'tag-low'}">${t.priority==='high'?'عالية':t.priority==='mid'?'متوسطة':'منخفضة'}</span>
-        </div>
+function save(){localStorage.setItem('musaidi_tasks',JSON.stringify(tasks));}
+function renderT(){
+  const l=document.getElementById('tlist');
+  if(!tasks.length){l.innerHTML='<div style="text-align:center;color:#999;padding:40px;font-size:13px">لا توجد مهام</div>';return;}
+  l.innerHTML=tasks.map(t=>`<div class="ti">
+    <div class="tck ${t.done?'done':''}" onclick="togT(${t.id})">${t.done?'✓':''}</div>
+    <div class="tcon">
+      <div class="tit ${t.done?'done':''}">${t.title}</div>
+      <div class="tm">
+        <span class="tag tp">${t.project}</span>
+        <span class="tag ${t.priority==='high'?'th':t.priority==='mid'?'tmd':'tl'}">${t.priority==='high'?'عالية':t.priority==='mid'?'متوسطة':'منخفضة'}</span>
       </div>
-      <div class="task-del" onclick="deleteTask(${t.id})">✕</div>
-    </div>`).join('');
+    </div>
+    <div class="td" onclick="delT(${t.id})">✕</div>
+  </div>`).join('');
 }
-
-function updateStats() {
-  const total=tasks.length, done=tasks.filter(t=>t.done).length, high=tasks.filter(t=>t.priority==='high'&&!t.done).length;
-  document.getElementById('stat-total').textContent=total;
-  document.getElementById('stat-done').textContent=done;
-  document.getElementById('stat-pct').textContent=total?Math.round(done/total*100)+'%':'0%';
-  document.getElementById('stat-high').textContent=high;
-  document.getElementById('stat-pending').textContent=total-done;
+function updS(){
+  const tot=tasks.length,dn=tasks.filter(t=>t.done).length,hi=tasks.filter(t=>t.priority==='high'&&!t.done).length;
+  document.getElementById('s-total').textContent=tot;
+  document.getElementById('s-done').textContent=dn;
+  document.getElementById('s-pct').textContent=tot?Math.round(dn/tot*100)+'%':'0%';
+  document.getElementById('s-high').textContent=hi;
+  document.getElementById('s-pend').textContent=tot-dn;
 }
-
-function toggleTask(id) { tasks=tasks.map(t=>t.id===id?{...t,done:!t.done}:t); saveTasks(); renderTasks(); updateStats(); }
-function deleteTask(id) { tasks=tasks.filter(t=>t.id!==id); saveTasks(); renderTasks(); updateStats(); }
-function toggleForm() { const f=document.getElementById('add-form'); f.classList.toggle('visible'); if(f.classList.contains('visible')) document.getElementById('task-input').focus(); }
-function addTask() {
-  const title=document.getElementById('task-input').value.trim(); if(!title) return;
-  tasks.unshift({id:Date.now(),title,project:document.getElementById('task-project').value,priority:document.getElementById('task-priority').value,done:false});
-  document.getElementById('task-input').value=''; document.getElementById('add-form').classList.remove('visible');
-  saveTasks(); renderTasks(); updateStats();
+function togT(id){tasks=tasks.map(t=>t.id===id?{...t,done:!t.done}:t);save();renderT();updS();}
+function delT(id){tasks=tasks.filter(t=>t.id!==id);save();renderT();updS();}
+function toggleForm(){const f=document.getElementById('af');f.classList.toggle('visible');if(f.classList.contains('visible'))document.getElementById('ti').focus();}
+function addTask(){
+  const title=document.getElementById('ti').value.trim();if(!title)return;
+  tasks.unshift({id:Date.now(),title,project:document.getElementById('tpr').value,priority:document.getElementById('tpi').value,done:false});
+  document.getElementById('ti').value='';document.getElementById('af').classList.remove('visible');
+  save();renderT();updS();
 }
-
-function switchView(v, btn) {
+function sv(v,btn){
   document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
   document.getElementById('view-'+v).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nbtn').forEach(el=>el.classList.remove('active'));
   btn.classList.add('active');
 }
-
-/* Chat */
-function appendMsg(text, type) {
-  const welcome=document.querySelector('.chat-welcome'); if(welcome) welcome.remove();
-  const msgs=document.getElementById('chat-messages');
-  const wrap=document.createElement('div');
-  wrap.className='msg msg-'+(type==='user'?'user':'ai')+(type==='thinking'?' msg-thinking':'');
+function am(text,type){
+  const w=document.querySelector('.cw');if(w)w.remove();
+  const msgs=document.getElementById('chat-msgs');
+  const d=document.createElement('div');
+  d.className='mw '+(type==='user'?'u':'a')+(type==='tk'?' tk':'');
   const now=new Date().toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});
-  wrap.innerHTML=`<div class="msg-bubble">${text}</div><div class="msg-time">${now}</div>`;
-  msgs.appendChild(wrap); msgs.scrollTop=msgs.scrollHeight; return wrap;
+  d.innerHTML=`<div class="mb">${text}</div><div class="mt">${now}</div>`;
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d;
 }
-function sendSug(text) { document.getElementById('chat-input').value=text; sendChat(); }
-async function sendChat() {
-  if(!API_KEY){const k=prompt('أدخل مفتاح Claude API:');if(k){localStorage.setItem('claude_key',k);API_KEY=k;}else return;}
-  const input=document.getElementById('chat-input'); const text=input.value.trim(); if(!text) return;
-  input.value=''; input.style.height='auto'; appendMsg(text,'user'); chatHistory.push({role:'user',content:text});
-  const btn=document.getElementById('chat-send-btn'); btn.disabled=true;
-  const thinking=appendMsg('<div class="typing-dots"><span></span><span></span><span></span></div>','thinking');
-  const tasksSummary=`المهام: ${tasks.map(t=>`${t.title}(${t.project},${t.done?'✓':'○'})`).join(' | ')}`;
-  try {
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':API_KEY,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:1024,system:PROJECTS_INFO+'\n'+tasksSummary,messages:chatHistory})});
-    const data=await res.json(); const reply=data.content?.[0]?.text||'حاول مرة أخرى.';
-    thinking.remove(); appendMsg(reply,'ai'); chatHistory.push({role:'assistant',content:reply});
-  } catch(e){thinking.querySelector('.msg-bubble').textContent='خطأ في الاتصال.';}
+function sendSug(t){document.getElementById('ci').value=t;sendChat();}
+async function sendChat(){
+  if(!AK){const k=prompt('أدخل مفتاح Claude API:');if(k){localStorage.setItem('claude_key',k);AK=k;}else return;}
+  const inp=document.getElementById('ci');const txt=inp.value.trim();if(!txt)return;
+  inp.value='';inp.style.height='auto';am(txt,'user');hist.push({role:'user',content:txt});
+  const btn=document.getElementById('csbtn');btn.disabled=true;
+  const tk=am('<div class="dots"><span></span><span></span><span></span></div>','tk');
+  const ts=`المهام: ${tasks.map(t=>`${t.title}(${t.project},${t.done?'✓':'○'})`).join(' | ')}`;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':AK,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:1024,system:SYS+'\n'+ts,messages:hist})});
+    const d=await r.json();const rep=d.content?.[0]?.text||'حاول مرة أخرى.';
+    tk.remove();am(rep,'ai');hist.push({role:'assistant',content:rep});
+  }catch(e){tk.querySelector('.mb').textContent='خطأ في الاتصال.';}
   btn.disabled=false;
 }
-
-/* Gmail */
-function gmailSignIn() {
-  const client=google.accounts.oauth2.initTokenClient({client_id:GOOGLE_CLIENT_ID,scope:GMAIL_SCOPES,callback:(resp)=>{
-    if(resp.access_token){
-      gmailToken=resp.access_token;
-      document.getElementById('gmail-auth-btn').style.display='none';
-      document.getElementById('gmail-refresh-btn').style.display='';
-      document.getElementById('gmail-compose-btn').style.display='';
-      document.getElementById('gmail-status').innerHTML='<span class="gmail-connected">● متصل</span>';
-      loadEmails();
-    }
-  }});
-  client.requestAccessToken();
+function gmailSignIn(){
+  const c=google.accounts.oauth2.initTokenClient({client_id:GID,scope:GSCOPE,callback:(r)=>{
+    if(r.access_token){gTok=r.access_token;
+      document.getElementById('gauthbtn').style.display='none';
+      document.getElementById('grefbtn').style.display='';
+      document.getElementById('gcmpbtn').style.display='';
+      document.getElementById('gstat').innerHTML='<span class="gc">● متصل</span>';
+      loadEmails();}
+  }});c.requestAccessToken();
 }
-async function gmailFetch(url){const res=await fetch(url,{headers:{Authorization:'Bearer '+gmailToken}});return res.json();}
+async function gf(u){const r=await fetch(u,{headers:{Authorization:'Bearer '+gTok}});return r.json();}
 async function loadEmails(){
-  if(!gmailToken) return;
-  document.getElementById('emails-container').innerHTML='<div class="empty-state"><div class="empty-state-icon">⏳</div><p>جاري التحميل...</p></div>';
+  if(!gTok)return;
+  document.getElementById('econt').innerHTML='<div class="es"><div class="esi">⏳</div><p>جاري التحميل...</p></div>';
   try{
-    const data=await gmailFetch('https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=30&labelIds=INBOX');
-    if(!data.messages){document.getElementById('emails-container').innerHTML='<div class="empty-state"><div class="empty-state-icon">📭</div><p>البريد فارغ</p></div>';return;}
-    emails=await Promise.all(data.messages.map(m=>gmailFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`)));
-    renderEmails();
-  }catch(e){document.getElementById('emails-container').innerHTML='<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>خطأ في التحميل</p></div>';}
+    const d=await gf('https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=30&labelIds=INBOX');
+    if(!d.messages){document.getElementById('econt').innerHTML='<div class="es"><div class="esi">📭</div><p>البريد فارغ</p></div>';return;}
+    emails=await Promise.all(d.messages.map(m=>gf(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`)));
+    renderE();
+  }catch(e){document.getElementById('econt').innerHTML='<div class="es"><div class="esi">⚠️</div><p>خطأ في التحميل</p></div>';}
 }
-const ACOLORS=['#f5c842','#34d399','#f87171','#60a5fa','#f472b6','#fb923c','#a78bfa'];
-function aColor(s){let h=0;for(let c of s)h=(h*31+c.charCodeAt(0))&0xffffffff;return ACOLORS[Math.abs(h)%ACOLORS.length];}
-function getH(msg,n){return msg.payload?.headers?.find(h=>h.name===n)?.value||'';}
-function fDate(d){if(!d)return '';const dt=new Date(d),now=new Date();if(dt.toDateString()===now.toDateString())return dt.toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});return dt.toLocaleDateString('ar',{day:'numeric',month:'short'});}
-function sName(from){return from.replace(/<.*>/,'').replace(/"/g,'').trim()||from.split('@')[0];}
-function renderEmails(){
-  selectedEmails.clear(); document.getElementById('gmail-delete-btn').style.display='none';
-  const html=emails.map(msg=>{
-    const from=getH(msg,'From'),subject=getH(msg,'Subject')||'(بلا موضوع)',date=fDate(getH(msg,'Date'));
-    const name=sName(from),initial=name[0]?.toUpperCase()||'?',color=aColor(from);
-    const isUnread=msg.labelIds?.includes('UNREAD');
-    return `<div class="email-item ${isUnread?'unread':''}" onclick="openEmail('${msg.id}')">
-      <div class="email-check" onclick="toggleSel(event,'${msg.id}',this)"></div>
-      <div class="email-avatar" style="background:${color}">${initial}</div>
-      <div class="email-content">
-        <div class="email-header"><div class="email-from">${name}</div><div class="email-date">${date}</div></div>
-        <div class="email-subject">${subject}</div>
-        <div class="email-snippet">${msg.snippet||''}</div>
+const AC=['#075e54','#128c7e','#25d366','#34b7f1','#e74c3c','#f39c12','#8e44ad'];
+function aC(s){let h=0;for(let c of s)h=(h*31+c.charCodeAt(0))&0xffffffff;return AC[Math.abs(h)%AC.length];}
+function gH(m,n){return m.payload?.headers?.find(h=>h.name===n)?.value||'';}
+function fD(d){if(!d)return '';const dt=new Date(d),now=new Date();if(dt.toDateString()===now.toDateString())return dt.toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});return dt.toLocaleDateString('ar',{day:'numeric',month:'short'});}
+function sN(f){return f.replace(/<.*>/,'').replace(/"/g,'').trim()||f.split('@')[0];}
+function renderE(){
+  selE.clear();document.getElementById('gdelbtn').style.display='none';
+  document.getElementById('econt').innerHTML=emails.map(msg=>{
+    const fr=gH(msg,'From'),sj=gH(msg,'Subject')||'(بلا موضوع)',dt=fD(gH(msg,'Date'));
+    const nm=sN(fr),in_=nm[0]?.toUpperCase()||'?',cl=aC(fr);
+    const ur=msg.labelIds?.includes('UNREAD');
+    return `<div class="ei ${ur?'ur':''}" onclick="openE('${msg.id}')">
+      <div class="eck" onclick="togS(event,'${msg.id}',this)"></div>
+      <div class="av" style="background:${cl}">${in_}</div>
+      <div class="ec">
+        <div class="eh"><div class="ef">${nm}</div><div class="edt">${dt}</div></div>
+        <div class="esj">${sj}</div>
+        <div class="esn">${msg.snippet||''}</div>
       </div>
-      ${isUnread?'<div class="email-unread-dot"></div>':''}
+      ${ur?'<div class="ud"></div>':''}
     </div>`;
-  }).join('');
-  document.getElementById('emails-container').innerHTML=html||'<div class="empty-state"><div class="empty-state-icon">📭</div><p>لا توجد رسائل</p></div>';
+  }).join('')||'<div class="es"><div class="esi">📭</div><p>لا توجد رسائل</p></div>';
 }
-function toggleSel(e,id,el){e.stopPropagation();if(selectedEmails.has(id)){selectedEmails.delete(id);el.classList.remove('checked');el.textContent='';}else{selectedEmails.add(id);el.classList.add('checked');el.textContent='✓';}document.getElementById('gmail-delete-btn').style.display=selectedEmails.size?'':'none';}
-async function openEmail(id){
-  currentEmailId=id;
-  const full=await gmailFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}?format=full`);
-  const subject=full.payload?.headers?.find(h=>h.name==='Subject')?.value||'(بلا موضوع)';
-  const from=full.payload?.headers?.find(h=>h.name==='From')?.value||'';
-  const date=fDate(full.payload?.headers?.find(h=>h.name==='Date')?.value);
+function togS(e,id,el){e.stopPropagation();if(selE.has(id)){selE.delete(id);el.classList.remove('ck');el.textContent='';}else{selE.add(id);el.classList.add('ck');el.textContent='✓';}document.getElementById('gdelbtn').style.display=selE.size?'':'none';}
+async function openE(id){
+  curEid=id;
+  const f=await gf(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}?format=full`);
+  const sj=f.payload?.headers?.find(h=>h.name==='Subject')?.value||'(بلا موضوع)';
+  const fr=f.payload?.headers?.find(h=>h.name==='From')?.value||'';
+  const dt=fD(f.payload?.headers?.find(h=>h.name==='Date')?.value);
   let body='';
-  const exBody=(part)=>{if(!part)return;if(part.mimeType==='text/plain'&&part.body?.data)body=atob(part.body.data.replace(/-/g,'+').replace(/_/g,'/'));else if(part.mimeType==='text/html'&&part.body?.data&&!body)body=atob(part.body.data.replace(/-/g,'+').replace(/_/g,'/'));if(part.parts)part.parts.forEach(exBody);};
-  exBody(full.payload);
-  document.getElementById('detail-subject').textContent=subject;
-  document.getElementById('detail-from').textContent=from;
-  document.getElementById('detail-date').textContent=date;
-  const bodyEl=document.getElementById('detail-body');
-  if(body.includes('<')){const iframe=document.createElement('iframe');iframe.srcdoc=body;iframe.style.cssText='width:100%;height:100%;border:none;background:white;border-radius:8px';bodyEl.innerHTML='';bodyEl.appendChild(iframe);}
-  else bodyEl.textContent=body||full.snippet;
-  document.getElementById('email-detail').classList.add('visible');
-  if(full.labelIds?.includes('UNREAD'))await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}/modify`,{method:'POST',headers:{'Authorization':'Bearer '+gmailToken,'Content-Type':'application/json'},body:JSON.stringify({removeLabelIds:['UNREAD']})});
+  const exB=(p)=>{if(!p)return;if(p.mimeType==='text/plain'&&p.body?.data)body=atob(p.body.data.replace(/-/g,'+').replace(/_/g,'/'));else if(p.mimeType==='text/html'&&p.body?.data&&!body)body=atob(p.body.data.replace(/-/g,'+').replace(/_/g,'/'));if(p.parts)p.parts.forEach(exB);};
+  exB(f.payload);
+  document.getElementById('dsubj').textContent=sj;
+  document.getElementById('dfrom').textContent=fr+' · '+dt;
+  const be=document.getElementById('dbody');
+  if(body.includes('<')){const ifr=document.createElement('iframe');ifr.srcdoc=body;ifr.style.cssText='width:100%;height:100%;border:none;background:#fff';be.innerHTML='';be.appendChild(ifr);}
+  else be.textContent=body||f.snippet;
+  document.getElementById('edet').classList.add('vis');
+  if(f.labelIds?.includes('UNREAD'))await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}/modify`,{method:'POST',headers:{'Authorization':'Bearer '+gTok,'Content-Type':'application/json'},body:JSON.stringify({removeLabelIds:['UNREAD']})});
 }
-function closeEmailDetail(){document.getElementById('email-detail').classList.remove('visible');currentEmailId=null;}
-async function deleteCurrentEmail(){if(!currentEmailId)return;await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${currentEmailId}/trash`,{method:'POST',headers:{Authorization:'Bearer '+gmailToken}});closeEmailDetail();emails=emails.filter(e=>e.id!==currentEmailId);renderEmails();}
-async function deleteSelected(){if(!selectedEmails.size)return;await Promise.all([...selectedEmails].map(id=>fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}/trash`,{method:'POST',headers:{Authorization:'Bearer '+gmailToken}})));emails=emails.filter(e=>!selectedEmails.has(e.id));selectedEmails.clear();renderEmails();document.getElementById('gmail-delete-btn').style.display='none';}
-function replyEmail(){const subj=document.getElementById('detail-subject').textContent,from=document.getElementById('detail-from').textContent,toEmail=from.match(/<(.+)>/)?.[1]||from;document.getElementById('compose-to').value=toEmail;document.getElementById('compose-subject').value='Re: '+subj;document.getElementById('compose-body').textContent='';document.getElementById('compose-modal').classList.add('visible');}
-function openCompose(){document.getElementById('compose-to').value='';document.getElementById('compose-subject').value='';document.getElementById('compose-body').textContent='';document.getElementById('compose-modal').classList.add('visible');}
-function closeCompose(){document.getElementById('compose-modal').classList.remove('visible');}
+function closeED(){document.getElementById('edet').classList.remove('vis');curEid=null;}
+async function delCurEmail(){if(!curEid)return;await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${curEid}/trash`,{method:'POST',headers:{Authorization:'Bearer '+gTok}});closeED();emails=emails.filter(e=>e.id!==curEid);renderE();}
+async function deleteSelected(){if(!selE.size)return;await Promise.all([...selE].map(id=>fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}/trash`,{method:'POST',headers:{Authorization:'Bearer '+gTok}})));emails=emails.filter(e=>!selE.has(e.id));selE.clear();renderE();document.getElementById('gdelbtn').style.display='none';}
+function replyEmail(){const sj=document.getElementById('dsubj').textContent,fr=document.getElementById('dfrom').textContent,to=fr.match(/<(.+)>/)?.[1]||fr.split('·')[0].trim();document.getElementById('cto').value=to;document.getElementById('csub').value='Re: '+sj;document.getElementById('cbody').textContent='';document.getElementById('comp').classList.add('vis');}
+function openCompose(){document.getElementById('cto').value='';document.getElementById('csub').value='';document.getElementById('cbody').textContent='';document.getElementById('comp').classList.add('vis');}
+function closeCompose(){document.getElementById('comp').classList.remove('vis');}
 async function sendEmail(){
-  const to=document.getElementById('compose-to').value.trim(),subject=document.getElementById('compose-subject').value.trim(),body=document.getElementById('compose-body').textContent.trim();
-  if(!to||!subject||!body){alert('يرجى تعبئة جميع الحقول');return;}
-  const msg=`To: ${to}\r\nSubject: =?UTF-8?B?${btoa(unescape(encodeURIComponent(subject)))}?=\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n${body}`;
-  const encoded=btoa(unescape(encodeURIComponent(msg))).replace(/\+/g,'-').replace(/\//g,'_');
-  const res=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send',{method:'POST',headers:{'Authorization':'Bearer '+gmailToken,'Content-Type':'application/json'},body:JSON.stringify({raw:encoded})});
-  if(res.ok){closeCompose();alert('✅ تم الإرسال!');}else{alert('❌ فشل الإرسال');}
+  const to=document.getElementById('cto').value.trim(),sj=document.getElementById('csub').value.trim(),bd=document.getElementById('cbody').textContent.trim();
+  if(!to||!sj||!bd){alert('يرجى تعبئة جميع الحقول');return;}
+  const msg=`To: ${to}\r\nSubject: =?UTF-8?B?${btoa(unescape(encodeURIComponent(sj)))}?=\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n${bd}`;
+  const enc=btoa(unescape(encodeURIComponent(msg))).replace(/\+/g,'-').replace(/\//g,'_');
+  const r=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send',{method:'POST',headers:{'Authorization':'Bearer '+gTok,'Content-Type':'application/json'},body:JSON.stringify({raw:enc})});
+  if(r.ok){closeCompose();alert('✅ تم الإرسال!');}else alert('❌ فشل الإرسال');
 }
-
-document.getElementById('date-badge').textContent=new Date().toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long'});
-if(!API_KEY){const k=prompt('أدخل مفتاح Claude API:');if(k){localStorage.setItem('claude_key',k);API_KEY=k;}}
-renderTasks(); updateStats();
-if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+document.getElementById('hdate').textContent=new Date().toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long'});
+if(!AK){const k=prompt('أدخل مفتاح Claude API:');if(k){localStorage.setItem('claude_key',k);AK=k;}}
+renderT();updS();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js');
 </script>
 </body>
 </html>
