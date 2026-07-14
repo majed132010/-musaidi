@@ -10,64 +10,54 @@
 <title>مساعدي</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --gd:#075e54;--gm:#128c7e;--gl:#25d366;--gp:#dcf8c6;
-  --bg:#ece5dd;--bgc:#e5ddd5;--w:#fff;
-  --t:#111;--t2:#555;--t3:#999;
-  --b:rgba(0,0,0,0.1);--r:10px;--nh:60px;--hh:56px;
-}
+:root{--gd:#075e54;--gm:#128c7e;--gl:#25d366;--gp:#dcf8c6;--bg:#ece5dd;--bgc:#e5ddd5;--w:#fff;--t:#111;--t2:#555;--t3:#999;--b:rgba(0,0,0,0.1);--r:10px;--nh:60px;--hh:56px;}
 html,body{height:100%;overflow:hidden}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--t);display:flex;flex-direction:column}
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-thumb{background:#ccc;border-radius:4px}
-
 .header{height:var(--hh);background:var(--gd);display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0}
 .logo{display:flex;align-items:center;gap:10px}
 .logo-icon{width:36px;height:36px;background:var(--gl);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
 .logo-text{font-size:17px;font-weight:600;color:#fff}
 .hdate{font-size:11px;color:rgba(255,255,255,0.7)}
-
 .app-body{flex:1;overflow:hidden;display:flex;flex-direction:column}
 .view{display:none;flex:1;flex-direction:column;overflow:hidden}
 .view.active{display:flex}
-
 .bnav{height:var(--nh);background:var(--w);border-top:1px solid var(--b);display:flex;align-items:center;justify-content:space-around;flex-shrink:0}
 .nbtn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;color:var(--t3);cursor:pointer;padding:8px 0;font-family:inherit}
 .nbtn.active{color:var(--gm)}
-.ni{font-size:22px}
-.nl{font-size:10px;font-weight:600}
+.ni{font-size:22px}.nl{font-size:10px;font-weight:600}
 
 /* CHAT */
 .cv{background:var(--bgc)}
 .cm{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:4px}
 .cw{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:12px;padding:20px}
-.wcard{background:var(--w);border-radius:12px;padding:20px;text-align:center;max-width:280px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
-.wi{font-size:48px;margin-bottom:8px}
-.wt{font-size:17px;font-weight:600;color:var(--t);margin-bottom:4px}
-.ws{font-size:13px;color:var(--t2);line-height:1.5}
-.sugs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
-.sb{font-size:12px;padding:8px 14px;border-radius:20px;border:1.5px solid var(--gm);background:var(--w);color:var(--gm);cursor:pointer;font-family:inherit;font-weight:500}
+.wcard{background:var(--w);border-radius:12px;padding:20px;text-align:center;max-width:300px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+.wi{font-size:44px;margin-bottom:8px}
+.wt{font-size:17px;font-weight:600;margin-bottom:4px}
+.ws{font-size:12px;color:var(--t2);line-height:1.5}
+.mail-status{display:flex;gap:6px;justify-content:center;margin:10px 0;flex-wrap:wrap}
+.ms{font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid #ddd;color:var(--t2)}
+.ms.ok{border-color:var(--gl);color:var(--gm);background:#f0faf0}
+.sugs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px}
+.sb{font-size:12px;padding:7px 13px;border-radius:20px;border:1.5px solid var(--gm);background:var(--w);color:var(--gm);cursor:pointer;font-family:inherit}
 .sb:active{background:var(--gp)}
-
 .mw{display:flex;flex-direction:column;margin:2px 0}
-.mw.u{align-items:flex-start}
-.mw.a{align-items:flex-end}
-.mb{max-width:78%;padding:8px 12px 6px;border-radius:8px;font-size:14px;line-height:1.5;white-space:pre-wrap;word-break:break-word;box-shadow:0 1px 1px rgba(0,0,0,0.1)}
-.mw.u .mb{background:var(--w);border-radius:0 8px 8px 8px;color:var(--t)}
-.mw.a .mb{background:var(--gp);border-radius:8px 0 8px 8px;color:var(--t)}
+.mw.u{align-items:flex-start}.mw.a{align-items:flex-end}
+.mb{max-width:80%;padding:8px 12px 6px;border-radius:8px;font-size:14px;line-height:1.5;white-space:pre-wrap;word-break:break-word;box-shadow:0 1px 1px rgba(0,0,0,0.1)}
+.mw.u .mb{background:var(--w);border-radius:0 8px 8px 8px}
+.mw.a .mb{background:var(--gp);border-radius:8px 0 8px 8px}
 .mw.tk .mb{background:var(--w);color:var(--t3);border-radius:0 8px 8px 8px}
 .mt{font-size:10px;color:var(--t3);margin-top:2px;padding:0 4px}
 .mw.a .mt{text-align:left}
 .dots{display:flex;gap:4px;padding:4px 2px}
 .dots span{width:7px;height:7px;background:var(--t3);border-radius:50%;animation:bo 1.2s infinite}
-.dots span:nth-child(2){animation-delay:.2s}
-.dots span:nth-child(3){animation-delay:.4s}
+.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
 @keyframes bo{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
-
 .cia{padding:8px 10px;background:var(--bg);display:flex;gap:8px;align-items:flex-end}
 .ci{flex:1;background:var(--w);border:none;border-radius:24px;padding:10px 16px;font-size:14px;font-family:inherit;color:var(--t);resize:none;outline:none;max-height:100px;line-height:1.5;box-shadow:0 1px 2px rgba(0,0,0,0.1)}
 .ci::placeholder{color:var(--t3)}
-.cs{width:44px;height:44px;background:var(--gm);border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
+.cs{width:44px;height:44px;background:var(--gm);border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .cs:disabled{opacity:.5}
 
 /* TASKS */
@@ -87,8 +77,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .af.visible{display:block}
 .af input,.af select{width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;font-family:inherit;background:#fff;color:var(--t);margin-bottom:8px;outline:none}
 .af input:focus,.af select:focus{border-color:var(--gm)}
-.fr{display:flex;gap:7px}
-.fr select{flex:1}
+.fr{display:flex;gap:7px}.fr select{flex:1}
 .fb{display:flex;gap:7px;justify-content:flex-end}
 .bsv{padding:7px 16px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
 .bcl{padding:7px 12px;background:none;border:1px solid #ddd;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;color:var(--t2)}
@@ -100,24 +89,25 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .tit.done{text-decoration:line-through;color:var(--t3)}
 .tm{display:flex;gap:5px;flex-wrap:wrap}
 .tag{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}
-.th{background:#fde8e8;color:#c0392b}
-.tmd{background:#fef3cd;color:#856404}
-.tl{background:#d4edda;color:#155724}
-.tp{background:#e8f5e9;color:var(--gd)}
+.th{background:#fde8e8;color:#c0392b}.tmd{background:#fef3cd;color:#856404}.tl{background:#d4edda;color:#155724}.tp{background:#e8f5e9;color:var(--gd)}
 .td{font-size:16px;color:#ccc;cursor:pointer;padding:2px 4px;flex-shrink:0}
 
-/* GMAIL */
-.gv{background:var(--w)}
-.ghb{background:var(--gd);padding:10px 16px;flex-shrink:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.gb{font-size:12px;padding:6px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.4);background:rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-family:inherit}
-.gb.pr{background:var(--gl);border-color:var(--gl);color:#fff;font-weight:600}
-.gb.dr{background:rgba(255,100,100,0.2);border-color:rgba(255,100,100,0.5)}
-.gst{font-size:11px;color:rgba(255,255,255,0.6);margin-right:auto}
+/* MAIL */
+.mvw{background:var(--w)}
+.mhb{background:var(--gd);padding:10px 16px;flex-shrink:0}
+.mhbt{color:#fff;font-size:14px;font-weight:600;margin-bottom:8px}
+.mtabs{display:flex;gap:6px}
+.mtab{font-size:12px;padding:6px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);cursor:pointer;font-family:inherit}
+.mtab.active{background:#fff;color:var(--gd);font-weight:600;border-color:#fff}
+.mtoolbar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid #f0f0f0;flex-wrap:wrap}
+.gb{font-size:12px;padding:6px 14px;border-radius:20px;border:1.5px solid #ddd;background:#f5f5f5;color:var(--t2);cursor:pointer;font-family:inherit}
+.gb.pr{background:var(--gm);border-color:var(--gm);color:#fff;font-weight:600}
+.gb.dr{background:#fde8e8;border-color:#f5c6c6;color:#c0392b}
+.gst{font-size:11px;color:var(--t3);margin-right:auto}
 .gc{color:var(--gl);font-weight:600}
 .el{flex:1;overflow-y:auto}
 .ei{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-bottom:1px solid #f0f0f0;cursor:pointer}
-.ei:active{background:#f5f5f5}
-.ei.ur{background:#f0faf0}
+.ei:active{background:#f5f5f5}.ei.ur{background:#f0faf0}
 .eck{width:18px;height:18px;border:1.5px solid #ddd;border-radius:4px;flex-shrink:0;margin-top:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px}
 .eck.ck{background:var(--gm);border-color:var(--gm);color:#fff}
 .av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;color:#fff}
@@ -130,7 +120,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .ei:not(.ur) .esj{color:var(--t2)}
 .esn{font-size:11.5px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ud{width:8px;height:8px;background:var(--gm);border-radius:50%;flex-shrink:0;margin-top:6px}
-
 .ed{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--w);z-index:200;display:none;flex-direction:column}
 .ed.vis{display:flex}
 .edh{background:var(--gd);padding:12px 16px;flex-shrink:0}
@@ -139,12 +128,13 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .edf{font-size:12px;color:rgba(255,255,255,0.7);margin-bottom:8px}
 .eda{display:flex;gap:6px}
 .ebody{flex:1;overflow-y:auto;padding:16px;font-size:14px;line-height:1.7;color:var(--t2)}
-
-.cm2{position:fixed;bottom:calc(var(--nh) + 8px);left:10px;right:10px;background:var(--w);border-radius:14px;z-index:300;display:none;flex-direction:column;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.2)}
+.cm2{position:fixed;bottom:calc(var(--nh)+8px);left:10px;right:10px;background:var(--w);border-radius:14px;z-index:300;display:none;flex-direction:column;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.2)}
 .cm2.vis{display:flex}
 .cmh{padding:14px 16px;background:var(--gd);display:flex;align-items:center;justify-content:space-between}
 .cmt{font-size:14px;font-weight:600;color:#fff}
 .cmc{background:none;border:none;color:#fff;cursor:pointer;font-size:20px}
+.cmsrc{display:flex;gap:10px;padding:8px 14px;border-bottom:1px solid #eee}
+.cmsrc label{font-size:12px;color:var(--t2);display:flex;align-items:center;gap:4px;cursor:pointer}
 .cmf{padding:10px 14px;border-bottom:1px solid #eee;display:flex;flex-direction:column;gap:6px}
 .cmfi{display:flex;align-items:center;gap:8px;border-bottom:1px solid #f0f0f0;padding:4px 0}
 .cmfi:last-child{border:none}
@@ -153,22 +143,24 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .cmb{min-height:120px;padding:12px 14px;outline:none;font-size:14px;font-family:inherit;color:var(--t);line-height:1.6}
 .cmb:empty:before{content:attr(data-placeholder);color:var(--t3)}
 .cmft{padding:10px 14px;border-top:1px solid #eee;display:flex;gap:8px;justify-content:flex-end}
-
 .es{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--t3);gap:10px;padding:40px}
-.esi{font-size:52px}
-.es p{font-size:13px;text-align:center}
+.esi{font-size:52px}.es p{font-size:13px;text-align:center}
+.hm-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:400;display:none;align-items:center;justify-content:center}
+.hm-modal.vis{display:flex}
+.hm-box{background:var(--w);border-radius:14px;padding:24px;width:90%;max-width:340px}
+.hm-title{font-size:16px;font-weight:600;margin-bottom:6px;text-align:center}
+.hm-sub{font-size:12px;color:var(--t2);margin-bottom:16px;text-align:center;line-height:1.6}
+.hm-input{width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:8px;font-size:13px;font-family:inherit;color:var(--t);outline:none;margin-bottom:10px}
+.hm-btns{display:flex;gap:8px}
+.hm-ok{flex:1;padding:10px;background:#0078d4;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+.hm-cl{flex:1;padding:10px;background:none;border:1px solid #ddd;border-radius:8px;font-size:14px;cursor:pointer;font-family:inherit;color:var(--t2)}
 </style>
 </head>
 <body>
-
 <div class="header">
-  <div class="logo">
-    <div class="logo-icon">🤖</div>
-    <span class="logo-text">مساعدي</span>
-  </div>
+  <div class="logo"><div class="logo-icon">🤖</div><span class="logo-text">مساعدي</span></div>
   <div class="hdate" id="hdate"></div>
 </div>
-
 <div class="app-body">
 
   <!-- CHAT -->
@@ -178,18 +170,22 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         <div class="wcard">
           <div class="wi">🤖</div>
           <div class="wt">مرحباً أبو أمجد</div>
-          <div class="ws">مساعدك الشخصي الذكي</div>
+          <div class="ws">مساعدك الذكي — يقرأ بريدك ويجاوبك</div>
+          <div class="mail-status">
+            <div class="ms" id="g-badge">📧 Gmail: غير مرتبط</div>
+            <div class="ms" id="h-badge">📨 Hotmail: غير مرتبط</div>
+          </div>
           <div class="sugs">
+            <button class="sb" onclick="sendSug('هل وصلت رسائل جديدة؟')">رسائل جديدة؟</button>
+            <button class="sb" onclick="sendSug('اعرض آخر 5 رسائل Gmail')">آخر Gmail</button>
+            <button class="sb" onclick="sendSug('اعرض آخر رسائل Hotmail')">آخر Hotmail</button>
             <button class="sb" onclick="sendSug('ما أولويات اليوم؟')">أولويات اليوم</button>
-            <button class="sb" onclick="sendSug('آخر تحديثات الأرض؟')">تحديثات الأرض</button>
-            <button class="sb" onclick="sendSug('كم مهمة متبقية؟')">المهام المتبقية</button>
-            <button class="sb" onclick="sendSug('ساعدني في مشكلة تقنية')">مشكلة تقنية</button>
           </div>
         </div>
       </div>
     </div>
     <div class="cia">
-      <textarea class="ci" id="ci" placeholder="اكتب رسالة..." rows="1"
+      <textarea class="ci" id="ci" placeholder="اسأل عن رسائلك أو مشاريعك..." rows="1"
         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"
         oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
       <button class="cs" id="csbtn" onclick="sendChat()">↑</button>
@@ -203,62 +199,49 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <div class="sr">
         <div class="sc"><div class="sl">إجمالي</div><div class="sv" id="s-total">0</div><div class="ss">مهمة</div></div>
         <div class="sc"><div class="sl">مكتملة</div><div class="sv" id="s-done">0</div><div class="ss" id="s-pct">0%</div></div>
-        <div class="sc"><div class="sl">عالية الأولوية</div><div class="sv" id="s-high">0</div><div class="ss">تحتاج انتباه</div></div>
+        <div class="sc"><div class="sl">عالية</div><div class="sv" id="s-high">0</div><div class="ss">تحتاج انتباه</div></div>
         <div class="sc"><div class="sl">متبقية</div><div class="sv" id="s-pend">0</div><div class="ss">غير مكتملة</div></div>
       </div>
     </div>
     <div class="tc">
-      <div class="tbar">
-        <div class="ttl">كل المهام</div>
-        <button class="abtn" onclick="toggleForm()">+ مهمة</button>
-      </div>
+      <div class="tbar"><div class="ttl">كل المهام</div><button class="abtn" onclick="toggleForm()">+ مهمة</button></div>
       <div class="af" id="af">
         <input type="text" id="ti" placeholder="اكتب المهمة..." />
         <div class="fr">
-          <select id="tpr">
-            <option value="الأرض">الأرض</option>
-            <option value="عوالم">عوالم</option>
-            <option value="بنك المعلومات">بنك المعلومات</option>
-            <option value="Konkan">Konkan</option>
-            <option value="ULTRAS HUB">ULTRAS HUB</option>
-            <option value="مساعدي">مساعدي</option>
-            <option value="شخصي">شخصي</option>
-          </select>
-          <select id="tpi">
-            <option value="high">عالية</option>
-            <option value="mid">متوسطة</option>
-            <option value="low">منخفضة</option>
-          </select>
+          <select id="tpr"><option value="الأرض">الأرض</option><option value="عوالم">عوالم</option><option value="بنك المعلومات">بنك المعلومات</option><option value="Konkan">Konkan</option><option value="ULTRAS HUB">ULTRAS HUB</option><option value="مساعدي">مساعدي</option><option value="شخصي">شخصي</option></select>
+          <select id="tpi"><option value="high">عالية</option><option value="mid">متوسطة</option><option value="low">منخفضة</option></select>
         </div>
-        <div class="fb">
-          <button class="bcl" onclick="toggleForm()">إلغاء</button>
-          <button class="bsv" onclick="addTask()">حفظ</button>
-        </div>
+        <div class="fb"><button class="bcl" onclick="toggleForm()">إلغاء</button><button class="bsv" onclick="addTask()">حفظ</button></div>
       </div>
       <div id="tlist"></div>
     </div>
   </div>
 
-  <!-- GMAIL -->
-  <div class="view gv" id="view-gmail" style="position:relative">
-    <div class="ghb">
-      <button class="gb pr" id="gauthbtn" onclick="gmailSignIn()">🔑 تسجيل الدخول</button>
-      <button class="gb" id="grefbtn" onclick="loadEmails()" style="display:none">🔄 تحديث</button>
-      <button class="gb" id="gcmpbtn" onclick="openCompose()" style="display:none">✏️ إنشاء</button>
-      <button class="gb dr" id="gdelbtn" onclick="deleteSelected()" style="display:none">🗑️ حذف</button>
-      <span class="gst" id="gstat">غير مرتبط</span>
+  <!-- MAIL -->
+  <div class="view mvw" id="view-mail" style="position:relative">
+    <div class="mhb">
+      <div class="mhbt">البريد الإلكتروني</div>
+      <div class="mtabs">
+        <button class="mtab active" onclick="switchTab('gmail',this)">📧 Gmail</button>
+        <button class="mtab" onclick="switchTab('hotmail',this)">📨 Hotmail</button>
+      </div>
     </div>
-    <div class="el" id="econt">
-      <div class="es"><div class="esi">📧</div><p>سجّل دخولك لعرض رسائلك</p></div>
+    <div class="mtoolbar">
+      <button class="gb pr" id="m-auth" onclick="mailAuth()">🔑 تسجيل الدخول</button>
+      <button class="gb" id="m-ref" onclick="loadMail()" style="display:none">🔄 تحديث</button>
+      <button class="gb" id="m-cmp" onclick="openCompose()" style="display:none">✏️ إنشاء</button>
+      <button class="gb dr" id="m-del" onclick="deleteSelected()" style="display:none">🗑️ حذف</button>
+      <span class="gst" id="m-stat">غير مرتبط</span>
     </div>
+    <div class="el" id="econt"><div class="es"><div class="esi">📧</div><p>سجّل دخولك لعرض رسائلك</p></div></div>
     <div class="ed" id="edet">
       <div class="edh">
         <button class="edb" onclick="closeED()">← رجوع</button>
         <div class="eds" id="dsubj"></div>
         <div class="edf" id="dfrom"></div>
         <div class="eda">
-          <button class="gb" onclick="replyEmail()">↩️ رد</button>
-          <button class="gb dr" onclick="delCurEmail()">🗑️ حذف</button>
+          <button class="gb" style="color:#fff;border-color:rgba(255,255,255,0.3)" onclick="replyEmail()">↩️ رد</button>
+          <button class="gb" style="color:#ffaaaa;border-color:rgba(255,100,100,0.3)" onclick="delCur()">🗑️ حذف</button>
         </div>
       </div>
       <div class="ebody" id="dbody"></div>
@@ -267,24 +250,39 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 </div>
 
-<!-- Bottom Nav -->
 <div class="bnav">
   <button class="nbtn active" onclick="sv('chat',this)"><span class="ni">💬</span><span class="nl">الدردشة</span></button>
   <button class="nbtn" onclick="sv('tasks',this)"><span class="ni">✅</span><span class="nl">المهام</span></button>
-  <button class="nbtn" onclick="sv('gmail',this)"><span class="ni">📧</span><span class="nl">Gmail</span></button>
+  <button class="nbtn" onclick="sv('mail',this)"><span class="ni">📧</span><span class="nl">البريد</span></button>
 </div>
 
-<!-- Compose -->
 <div class="cm2" id="comp">
   <div class="cmh"><span class="cmt">رسالة جديدة</span><button class="cmc" onclick="closeCompose()">✕</button></div>
+  <div class="cmsrc">
+    <label><input type="radio" name="csrc" value="gmail" checked> Gmail</label>
+    <label><input type="radio" name="csrc" value="hotmail"> Hotmail</label>
+  </div>
   <div class="cmf">
-    <div class="cmfi"><span class="cmfl">إلى</span><input type="email" id="cto" placeholder="example@gmail.com"/></div>
+    <div class="cmfi"><span class="cmfl">إلى</span><input type="email" id="cto" placeholder="example@email.com"/></div>
     <div class="cmfi"><span class="cmfl">موضوع</span><input type="text" id="csub" placeholder="موضوع الرسالة"/></div>
   </div>
   <div class="cmb" id="cbody" contenteditable="true" data-placeholder="اكتب رسالتك..."></div>
-  <div class="cmft">
-    <button class="bcl" onclick="closeCompose()">إلغاء</button>
-    <button class="bsv" onclick="sendEmail()">إرسال ✉️</button>
+  <div class="cmft"><button class="bcl" onclick="closeCompose()">إلغاء</button><button class="bsv" onclick="sendEmail()">إرسال ✉️</button></div>
+</div>
+
+<div class="hm-modal" id="hm-modal">
+  <div class="hm-box">
+    <div class="hm-title">📨 ربط Hotmail</div>
+    <div class="hm-sub">للوصول لـ Hotmail عبر Microsoft Graph API:<br>
+    1. اذهب لـ <a href="https://developer.microsoft.com/en-us/graph/graph-explorer" target="_blank" style="color:#0078d4">Graph Explorer</a><br>
+    2. سجّل دخولك بـ majed132010@hotmail.com<br>
+    3. انسخ الـ Access Token من الزر أعلى الصفحة<br>
+    4. الصقه هنا:</div>
+    <input class="hm-input" id="hm-inp" placeholder="الصق الـ Access Token هنا..."/>
+    <div class="hm-btns">
+      <button class="hm-cl" onclick="closeHM()">إلغاء</button>
+      <button class="hm-ok" onclick="saveHM()">ربط</button>
+    </div>
   </div>
 </div>
 
@@ -292,50 +290,35 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <script>
 const GID='498546452069-rptoquk5iio9699psetipnidvaac8g5t.apps.googleusercontent.com';
 const GSCOPE='https://www.googleapis.com/auth/gmail.modify';
-const SYS=`أنت مساعد شخصي لأبو أمجد، مطور عربي مستقل يعمل على:
-1. الأرض: لعبة تنافسية (React+FastAPI+MongoDB) - 5800+ سؤال
-2. عوالم: تطبيق اجتماعي Discord-like (Firebase+Agora)
-3. بنك المعلومات: لعبة أسئلة وأجوبة (Firebase+WebRTC)
-4. Konkan: حاسبة الكونكان (React Native+Expo)
-5. ULTRAS HUB: منصة كرة قدم PWA مع Cloudflare Worker
-6. مساعدي: مدير مهام + مساعد ذكي + Gmail
-أجب بالعربية بشكل مختصر وعملي.`;
+const SYS=`أنت مساعد شخصي لأبو أمجد، مطور عربي مستقل.
+المشاريع: الأرض(React+FastAPI+MongoDB)، عوالم(Firebase+Agora)، بنك المعلومات، Konkan، ULTRAS HUB، مساعدي.
+لديك صلاحية قراءة بريد المستخدم. عندما يسأل ستجد ملخص رسائله في السياق.
+أجب بالعربية بشكل مختصر ومفيد.`;
 
 let AK=localStorage.getItem('claude_key')||'';
 let tasks=JSON.parse(localStorage.getItem('musaidi_tasks')||'[]');
-let hist=[],gTok=null,emails=[],selE=new Set(),curEid=null;
+let hist=[],gTok=null,hmTok=localStorage.getItem('hm_token')||null;
+let emails=[],selE=new Set(),curEid=null,curTab='gmail';
 
 if(!tasks.length){tasks=[
   {id:1,title:'نقل metadata الفئات السبع إلى EXTRA_CATEGORIES',project:'الأرض',priority:'high',done:false},
   {id:2,title:'إصلاح bug الـ #contentArea في عوالم',project:'عوالم',priority:'mid',done:false},
   {id:3,title:'اختبار Agora بعد تغيير الشهادة',project:'الأرض',priority:'mid',done:false},
   {id:4,title:'تجربة قنوات يوتيوب الـ 13 الجديدة',project:'ULTRAS HUB',priority:'low',done:false},
-  {id:5,title:'ربط Gmail بمساعدي',project:'مساعدي',priority:'high',done:true},
+  {id:5,title:'ربط Gmail+Hotmail بمساعدي',project:'مساعدي',priority:'high',done:true},
 ];save();}
 
 function save(){localStorage.setItem('musaidi_tasks',JSON.stringify(tasks));}
 function renderT(){
   const l=document.getElementById('tlist');
   if(!tasks.length){l.innerHTML='<div style="text-align:center;color:#999;padding:40px;font-size:13px">لا توجد مهام</div>';return;}
-  l.innerHTML=tasks.map(t=>`<div class="ti">
-    <div class="tck ${t.done?'done':''}" onclick="togT(${t.id})">${t.done?'✓':''}</div>
-    <div class="tcon">
-      <div class="tit ${t.done?'done':''}">${t.title}</div>
-      <div class="tm">
-        <span class="tag tp">${t.project}</span>
-        <span class="tag ${t.priority==='high'?'th':t.priority==='mid'?'tmd':'tl'}">${t.priority==='high'?'عالية':t.priority==='mid'?'متوسطة':'منخفضة'}</span>
-      </div>
-    </div>
-    <div class="td" onclick="delT(${t.id})">✕</div>
-  </div>`).join('');
+  l.innerHTML=tasks.map(t=>`<div class="ti"><div class="tck ${t.done?'done':''}" onclick="togT(${t.id})">${t.done?'✓':''}</div><div class="tcon"><div class="tit ${t.done?'done':''}">${t.title}</div><div class="tm"><span class="tag tp">${t.project}</span><span class="tag ${t.priority==='high'?'th':t.priority==='mid'?'tmd':'tl'}">${t.priority==='high'?'عالية':t.priority==='mid'?'متوسطة':'منخفضة'}</span></div></div><div class="td" onclick="delT(${t.id})">✕</div></div>`).join('');
 }
 function updS(){
   const tot=tasks.length,dn=tasks.filter(t=>t.done).length,hi=tasks.filter(t=>t.priority==='high'&&!t.done).length;
-  document.getElementById('s-total').textContent=tot;
-  document.getElementById('s-done').textContent=dn;
+  document.getElementById('s-total').textContent=tot;document.getElementById('s-done').textContent=dn;
   document.getElementById('s-pct').textContent=tot?Math.round(dn/tot*100)+'%':'0%';
-  document.getElementById('s-high').textContent=hi;
-  document.getElementById('s-pend').textContent=tot-dn;
+  document.getElementById('s-high').textContent=hi;document.getElementById('s-pend').textContent=tot-dn;
 }
 function togT(id){tasks=tasks.map(t=>t.id===id?{...t,done:!t.done}:t);save();renderT();updS();}
 function delT(id){tasks=tasks.filter(t=>t.id!==id);save();renderT();updS();}
@@ -343,14 +326,149 @@ function toggleForm(){const f=document.getElementById('af');f.classList.toggle('
 function addTask(){
   const title=document.getElementById('ti').value.trim();if(!title)return;
   tasks.unshift({id:Date.now(),title,project:document.getElementById('tpr').value,priority:document.getElementById('tpi').value,done:false});
-  document.getElementById('ti').value='';document.getElementById('af').classList.remove('visible');
-  save();renderT();updS();
+  document.getElementById('ti').value='';document.getElementById('af').classList.remove('visible');save();renderT();updS();
 }
 function sv(v,btn){
   document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
   document.getElementById('view-'+v).classList.add('active');
   document.querySelectorAll('.nbtn').forEach(el=>el.classList.remove('active'));
   btn.classList.add('active');
+  if(v==='mail')updToolbar();
+}
+function switchTab(tab,btn){
+  curTab=tab;document.querySelectorAll('.mtab').forEach(el=>el.classList.remove('active'));btn.classList.add('active');
+  updToolbar();loadMail();
+}
+function updToolbar(){
+  const conn=curTab==='gmail'?!!gTok:!!hmTok;
+  document.getElementById('m-auth').style.display=conn?'none':'';
+  document.getElementById('m-ref').style.display=conn?'':'none';
+  document.getElementById('m-cmp').style.display=conn?'':'none';
+  document.getElementById('m-stat').innerHTML=conn?`<span class="gc">● متصل</span>`:'غير مرتبط';
+  if(!conn)document.getElementById('econt').innerHTML='<div class="es"><div class="esi">'+(curTab==='gmail'?'📧':'📨')+'</div><p>سجّل دخولك لعرض رسائلك</p></div>';
+}
+function mailAuth(){if(curTab==='gmail')gmailSignIn();else document.getElementById('hm-modal').classList.add('vis');}
+function gmailSignIn(){
+  const c=google.accounts.oauth2.initTokenClient({client_id:GID,scope:GSCOPE,callback:(r)=>{
+    if(r.access_token){gTok=r.access_token;updToolbar();updBadges();loadGmail();}
+  }});c.requestAccessToken();
+}
+async function gf(u){const r=await fetch(u,{headers:{Authorization:'Bearer '+gTok}});return r.json();}
+async function loadGmail(){
+  document.getElementById('econt').innerHTML='<div class="es"><div class="esi">⏳</div><p>جاري التحميل...</p></div>';
+  try{
+    const d=await gf('https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=20&labelIds=INBOX');
+    if(!d.messages){document.getElementById('econt').innerHTML='<div class="es"><div class="esi">📭</div><p>البريد فارغ</p></div>';emails=[];return;}
+    const msgs=await Promise.all(d.messages.map(m=>gf(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`)));
+    emails=msgs.map(m=>({...m,_src:'gmail'}));renderE();
+  }catch(e){document.getElementById('econt').innerHTML='<div class="es"><div class="esi">⚠️</div><p>خطأ في التحميل</p></div>';}
+}
+function closeHM(){document.getElementById('hm-modal').classList.remove('vis');}
+function saveHM(){
+  const t=document.getElementById('hm-inp').value.trim();if(!t)return;
+  hmTok=t.startsWith('Bearer ')?t.slice(7):t;
+  localStorage.setItem('hm_token',hmTok);closeHM();updToolbar();updBadges();loadHotmail();
+}
+async function loadHotmail(){
+  document.getElementById('econt').innerHTML='<div class="es"><div class="esi">⏳</div><p>جاري التحميل...</p></div>';
+  try{
+    const r=await fetch('https://graph.microsoft.com/v1.0/me/mailFolders/inbox/messages?$top=20&$select=id,subject,from,receivedDateTime,bodyPreview,isRead',{headers:{Authorization:'Bearer '+hmTok}});
+    const d=await r.json();
+    if(d.error){throw new Error(d.error.message);}
+    if(!d.value||!d.value.length){document.getElementById('econt').innerHTML='<div class="es"><div class="esi">📭</div><p>البريد فارغ</p></div>';emails=[];return;}
+    emails=d.value.map(m=>({_src:'hotmail',id:m.id,labelIds:m.isRead?[]:['UNREAD'],snippet:m.bodyPreview,payload:{headers:[{name:'From',value:m.from?.emailAddress?.name||m.from?.emailAddress?.address||''},{name:'Subject',value:m.subject||'(بلا موضوع)'},{name:'Date',value:m.receivedDateTime}]}}));
+    renderE();
+  }catch(e){
+    hmTok=null;localStorage.removeItem('hm_token');
+    document.getElementById('econt').innerHTML='<div class="es"><div class="esi">⚠️</div><p>انتهت صلاحية الرمز<br>سجّل دخولك مجدداً</p></div>';
+    updToolbar();updBadges();
+  }
+}
+function loadMail(){if(curTab==='gmail'&&gTok)loadGmail();else if(curTab==='hotmail'&&hmTok)loadHotmail();}
+const AC=['#075e54','#128c7e','#e74c3c','#f39c12','#8e44ad','#2980b9','#16a085'];
+function aC(s){let h=0;for(let c of s)h=(h*31+c.charCodeAt(0))&0xffffffff;return AC[Math.abs(h)%AC.length];}
+function gH(m,n){return m.payload?.headers?.find(h=>h.name===n)?.value||'';}
+function fD(d){if(!d)return '';const dt=new Date(d),now=new Date();if(dt.toDateString()===now.toDateString())return dt.toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});return dt.toLocaleDateString('ar',{day:'numeric',month:'short'});}
+function sN(f){return f.replace(/<.*>/,'').replace(/"/g,'').trim()||f.split('@')[0];}
+function renderE(){
+  selE.clear();document.getElementById('m-del').style.display='none';
+  document.getElementById('econt').innerHTML=emails.map(msg=>{
+    const fr=gH(msg,'From'),sj=gH(msg,'Subject')||'(بلا موضوع)',dt=fD(gH(msg,'Date'));
+    const nm=sN(fr),in_=nm[0]?.toUpperCase()||'?',cl=aC(fr),ur=msg.labelIds?.includes('UNREAD');
+    return `<div class="ei ${ur?'ur':''}" onclick="openE('${msg.id}','${msg._src}')">
+      <div class="eck" onclick="togS(event,'${msg.id}',this)"></div>
+      <div class="av" style="background:${cl}">${in_}</div>
+      <div class="ec"><div class="eh"><div class="ef">${nm}</div><div class="edt">${dt}</div></div><div class="esj">${sj}</div><div class="esn">${msg.snippet||''}</div></div>
+      ${ur?'<div class="ud"></div>':''}
+    </div>`;
+  }).join('')||'<div class="es"><div class="esi">📭</div><p>لا توجد رسائل</p></div>';
+}
+function togS(e,id,el){e.stopPropagation();if(selE.has(id)){selE.delete(id);el.classList.remove('ck');el.textContent='';}else{selE.add(id);el.classList.add('ck');el.textContent='✓';}document.getElementById('m-del').style.display=selE.size?'':'none';}
+async function openE(id,src){
+  curEid={id,src};let subject='',from='',date='',body='';
+  if(src==='gmail'){
+    const f=await gf(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}?format=full`);
+    subject=f.payload?.headers?.find(h=>h.name==='Subject')?.value||'(بلا موضوع)';
+    from=f.payload?.headers?.find(h=>h.name==='From')?.value||'';
+    date=fD(f.payload?.headers?.find(h=>h.name==='Date')?.value);
+    const exB=(p)=>{if(!p)return;if(p.mimeType==='text/plain'&&p.body?.data)body=atob(p.body.data.replace(/-/g,'+').replace(/_/g,'/'));else if(p.mimeType==='text/html'&&p.body?.data&&!body)body=atob(p.body.data.replace(/-/g,'+').replace(/_/g,'/'));if(p.parts)p.parts.forEach(exB);};
+    exB(f.payload);
+    if(f.labelIds?.includes('UNREAD'))fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}/modify`,{method:'POST',headers:{'Authorization':'Bearer '+gTok,'Content-Type':'application/json'},body:JSON.stringify({removeLabelIds:['UNREAD']})});
+  }else{
+    const r=await fetch(`https://graph.microsoft.com/v1.0/me/messages/${id}?$select=subject,from,receivedDateTime,body`,{headers:{Authorization:'Bearer '+hmTok}});
+    const f=await r.json();
+    subject=f.subject||'(بلا موضوع)';from=f.from?.emailAddress?.name||f.from?.emailAddress?.address||'';
+    date=fD(f.receivedDateTime);body=f.body?.content||'';
+  }
+  document.getElementById('dsubj').textContent=subject;
+  document.getElementById('dfrom').textContent=from+' · '+date;
+  const be=document.getElementById('dbody');
+  if(body.includes('<')){const ifr=document.createElement('iframe');ifr.srcdoc=body;ifr.style.cssText='width:100%;height:100%;border:none;background:#fff';be.innerHTML='';be.appendChild(ifr);}
+  else be.textContent=body||'';
+  document.getElementById('edet').classList.add('vis');
+}
+function closeED(){document.getElementById('edet').classList.remove('vis');curEid=null;}
+async function delCur(){
+  if(!curEid)return;
+  if(curEid.src==='gmail')await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${curEid.id}/trash`,{method:'POST',headers:{Authorization:'Bearer '+gTok}});
+  else await fetch(`https://graph.microsoft.com/v1.0/me/messages/${curEid.id}`,{method:'DELETE',headers:{Authorization:'Bearer '+hmTok}});
+  const eid=curEid.id;closeED();emails=emails.filter(e=>e.id!==eid);renderE();
+}
+async function deleteSelected(){
+  await Promise.all([...selE].map(id=>{
+    const m=emails.find(e=>e.id===id);
+    return m?._src==='gmail'?fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}/trash`,{method:'POST',headers:{Authorization:'Bearer '+gTok}}):fetch(`https://graph.microsoft.com/v1.0/me/messages/${id}`,{method:'DELETE',headers:{Authorization:'Bearer '+hmTok}});
+  }));
+  emails=emails.filter(e=>!selE.has(e.id));selE.clear();renderE();document.getElementById('m-del').style.display='none';
+}
+function replyEmail(){
+  const sj=document.getElementById('dsubj').textContent,fr=document.getElementById('dfrom').textContent;
+  const to=fr.match(/<(.+)>/)?.[1]||fr.split('·')[0].trim();
+  document.getElementById('cto').value=to;document.getElementById('csub').value='Re: '+sj;
+  document.getElementById('cbody').textContent='';document.getElementById('comp').classList.add('vis');
+}
+function openCompose(){document.getElementById('cto').value='';document.getElementById('csub').value='';document.getElementById('cbody').textContent='';document.getElementById('comp').classList.add('vis');}
+function closeCompose(){document.getElementById('comp').classList.remove('vis');}
+async function sendEmail(){
+  const src=document.querySelector('input[name="csrc"]:checked').value;
+  const to=document.getElementById('cto').value.trim(),sj=document.getElementById('csub').value.trim(),bd=document.getElementById('cbody').textContent.trim();
+  if(!to||!sj||!bd){alert('يرجى تعبئة جميع الحقول');return;}
+  if(src==='gmail'){
+    if(!gTok){alert('سجّل دخول Gmail أولاً');return;}
+    const msg=`To: ${to}\r\nSubject: =?UTF-8?B?${btoa(unescape(encodeURIComponent(sj)))}?=\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n${bd}`;
+    const enc=btoa(unescape(encodeURIComponent(msg))).replace(/\+/g,'-').replace(/\//g,'_');
+    const r=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send',{method:'POST',headers:{'Authorization':'Bearer '+gTok,'Content-Type':'application/json'},body:JSON.stringify({raw:enc})});
+    r.ok?closeCompose()&&alert('✅ تم الإرسال!'):alert('❌ فشل الإرسال');
+  }else{
+    if(!hmTok){alert('سجّل دخول Hotmail أولاً');return;}
+    const r=await fetch('https://graph.microsoft.com/v1.0/me/sendMail',{method:'POST',headers:{'Authorization':'Bearer '+hmTok,'Content-Type':'application/json'},body:JSON.stringify({message:{subject:sj,body:{contentType:'Text',content:bd},toRecipients:[{emailAddress:{address:to}}]}})});
+    r.ok?(closeCompose(),alert('✅ تم الإرسال!')):alert('❌ فشل الإرسال');
+  }
+}
+function updBadges(){
+  const gb=document.getElementById('g-badge'),hb=document.getElementById('h-badge');
+  if(gTok){gb.textContent='📧 Gmail: متصل';gb.classList.add('ok');}
+  if(hmTok){hb.textContent='📨 Hotmail: متصل';hb.classList.add('ok');}
 }
 function am(text,type){
   const w=document.querySelector('.cw');if(w)w.remove();
@@ -362,6 +480,32 @@ function am(text,type){
   msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d;
 }
 function sendSug(t){document.getElementById('ci').value=t;sendChat();}
+async function getMailCtx(){
+  let ctx='';
+  if(gTok){
+    try{
+      const d=await gf('https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=8&labelIds=INBOX');
+      if(d.messages){
+        const msgs=await Promise.all(d.messages.slice(0,5).map(m=>gf(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`)));
+        const unread=msgs.filter(m=>m.labelIds?.includes('UNREAD')).length;
+        ctx+=`\n=== Gmail (${unread} غير مقروءة) ===\n`;
+        msgs.forEach(m=>{const ur=m.labelIds?.includes('UNREAD')?'🔵':'⚪';ctx+=`${ur} من: ${sN(gH(m,'From'))} | ${gH(m,'Subject')||'(بلا موضوع)'} | ${fD(gH(m,'Date'))}\n`;});
+      }
+    }catch(e){ctx+='\n[Gmail: خطأ في التحميل]\n';}
+  }else ctx+='\n[Gmail: غير مرتبط — اطلب من المستخدم تسجيل الدخول]\n';
+  if(hmTok){
+    try{
+      const r=await fetch('https://graph.microsoft.com/v1.0/me/mailFolders/inbox/messages?$top=5&$select=subject,from,receivedDateTime,isRead',{headers:{Authorization:'Bearer '+hmTok}});
+      const d=await r.json();
+      if(d.value){
+        const unread=d.value.filter(m=>!m.isRead).length;
+        ctx+=`\n=== Hotmail (${unread} غير مقروءة) ===\n`;
+        d.value.forEach(m=>{const ur=!m.isRead?'🔵':'⚪';ctx+=`${ur} من: ${m.from?.emailAddress?.name||m.from?.emailAddress?.address} | ${m.subject||'(بلا موضوع)'} | ${fD(m.receivedDateTime)}\n`;});
+      }
+    }catch(e){ctx+='\n[Hotmail: انتهت الصلاحية]\n';}
+  }else ctx+='\n[Hotmail: غير مرتبط — اطلب من المستخدم تسجيل الدخول]\n';
+  return ctx;
+}
 async function sendChat(){
   if(!AK){const k=prompt('أدخل مفتاح Claude API:');if(k){localStorage.setItem('claude_key',k);AK=k;}else return;}
   const inp=document.getElementById('ci');const txt=inp.value.trim();if(!txt)return;
@@ -369,91 +513,19 @@ async function sendChat(){
   const btn=document.getElementById('csbtn');btn.disabled=true;
   const tk=am('<div class="dots"><span></span><span></span><span></span></div>','tk');
   const ts=`المهام: ${tasks.map(t=>`${t.title}(${t.project},${t.done?'✓':'○'})`).join(' | ')}`;
+  const isMailQ=/رسال|بريد|ايميل|gmail|hotmail|وصل|جديد|inbox|mail/i.test(txt);
+  let mailCtx='';
+  if(isMailQ||hist.length<=2)mailCtx=await getMailCtx();
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':AK,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:1024,system:SYS+'\n'+ts,messages:hist})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':AK,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:1024,system:SYS+'\n'+ts+(mailCtx?'\n\nبيانات البريد الحالية:\n'+mailCtx:''),messages:hist})});
     const d=await r.json();const rep=d.content?.[0]?.text||'حاول مرة أخرى.';
     tk.remove();am(rep,'ai');hist.push({role:'assistant',content:rep});
   }catch(e){tk.querySelector('.mb').textContent='خطأ في الاتصال.';}
   btn.disabled=false;
 }
-function gmailSignIn(){
-  const c=google.accounts.oauth2.initTokenClient({client_id:GID,scope:GSCOPE,callback:(r)=>{
-    if(r.access_token){gTok=r.access_token;
-      document.getElementById('gauthbtn').style.display='none';
-      document.getElementById('grefbtn').style.display='';
-      document.getElementById('gcmpbtn').style.display='';
-      document.getElementById('gstat').innerHTML='<span class="gc">● متصل</span>';
-      loadEmails();}
-  }});c.requestAccessToken();
-}
-async function gf(u){const r=await fetch(u,{headers:{Authorization:'Bearer '+gTok}});return r.json();}
-async function loadEmails(){
-  if(!gTok)return;
-  document.getElementById('econt').innerHTML='<div class="es"><div class="esi">⏳</div><p>جاري التحميل...</p></div>';
-  try{
-    const d=await gf('https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=30&labelIds=INBOX');
-    if(!d.messages){document.getElementById('econt').innerHTML='<div class="es"><div class="esi">📭</div><p>البريد فارغ</p></div>';return;}
-    emails=await Promise.all(d.messages.map(m=>gf(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`)));
-    renderE();
-  }catch(e){document.getElementById('econt').innerHTML='<div class="es"><div class="esi">⚠️</div><p>خطأ في التحميل</p></div>';}
-}
-const AC=['#075e54','#128c7e','#25d366','#34b7f1','#e74c3c','#f39c12','#8e44ad'];
-function aC(s){let h=0;for(let c of s)h=(h*31+c.charCodeAt(0))&0xffffffff;return AC[Math.abs(h)%AC.length];}
-function gH(m,n){return m.payload?.headers?.find(h=>h.name===n)?.value||'';}
-function fD(d){if(!d)return '';const dt=new Date(d),now=new Date();if(dt.toDateString()===now.toDateString())return dt.toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});return dt.toLocaleDateString('ar',{day:'numeric',month:'short'});}
-function sN(f){return f.replace(/<.*>/,'').replace(/"/g,'').trim()||f.split('@')[0];}
-function renderE(){
-  selE.clear();document.getElementById('gdelbtn').style.display='none';
-  document.getElementById('econt').innerHTML=emails.map(msg=>{
-    const fr=gH(msg,'From'),sj=gH(msg,'Subject')||'(بلا موضوع)',dt=fD(gH(msg,'Date'));
-    const nm=sN(fr),in_=nm[0]?.toUpperCase()||'?',cl=aC(fr);
-    const ur=msg.labelIds?.includes('UNREAD');
-    return `<div class="ei ${ur?'ur':''}" onclick="openE('${msg.id}')">
-      <div class="eck" onclick="togS(event,'${msg.id}',this)"></div>
-      <div class="av" style="background:${cl}">${in_}</div>
-      <div class="ec">
-        <div class="eh"><div class="ef">${nm}</div><div class="edt">${dt}</div></div>
-        <div class="esj">${sj}</div>
-        <div class="esn">${msg.snippet||''}</div>
-      </div>
-      ${ur?'<div class="ud"></div>':''}
-    </div>`;
-  }).join('')||'<div class="es"><div class="esi">📭</div><p>لا توجد رسائل</p></div>';
-}
-function togS(e,id,el){e.stopPropagation();if(selE.has(id)){selE.delete(id);el.classList.remove('ck');el.textContent='';}else{selE.add(id);el.classList.add('ck');el.textContent='✓';}document.getElementById('gdelbtn').style.display=selE.size?'':'none';}
-async function openE(id){
-  curEid=id;
-  const f=await gf(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}?format=full`);
-  const sj=f.payload?.headers?.find(h=>h.name==='Subject')?.value||'(بلا موضوع)';
-  const fr=f.payload?.headers?.find(h=>h.name==='From')?.value||'';
-  const dt=fD(f.payload?.headers?.find(h=>h.name==='Date')?.value);
-  let body='';
-  const exB=(p)=>{if(!p)return;if(p.mimeType==='text/plain'&&p.body?.data)body=atob(p.body.data.replace(/-/g,'+').replace(/_/g,'/'));else if(p.mimeType==='text/html'&&p.body?.data&&!body)body=atob(p.body.data.replace(/-/g,'+').replace(/_/g,'/'));if(p.parts)p.parts.forEach(exB);};
-  exB(f.payload);
-  document.getElementById('dsubj').textContent=sj;
-  document.getElementById('dfrom').textContent=fr+' · '+dt;
-  const be=document.getElementById('dbody');
-  if(body.includes('<')){const ifr=document.createElement('iframe');ifr.srcdoc=body;ifr.style.cssText='width:100%;height:100%;border:none;background:#fff';be.innerHTML='';be.appendChild(ifr);}
-  else be.textContent=body||f.snippet;
-  document.getElementById('edet').classList.add('vis');
-  if(f.labelIds?.includes('UNREAD'))await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}/modify`,{method:'POST',headers:{'Authorization':'Bearer '+gTok,'Content-Type':'application/json'},body:JSON.stringify({removeLabelIds:['UNREAD']})});
-}
-function closeED(){document.getElementById('edet').classList.remove('vis');curEid=null;}
-async function delCurEmail(){if(!curEid)return;await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${curEid}/trash`,{method:'POST',headers:{Authorization:'Bearer '+gTok}});closeED();emails=emails.filter(e=>e.id!==curEid);renderE();}
-async function deleteSelected(){if(!selE.size)return;await Promise.all([...selE].map(id=>fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}/trash`,{method:'POST',headers:{Authorization:'Bearer '+gTok}})));emails=emails.filter(e=>!selE.has(e.id));selE.clear();renderE();document.getElementById('gdelbtn').style.display='none';}
-function replyEmail(){const sj=document.getElementById('dsubj').textContent,fr=document.getElementById('dfrom').textContent,to=fr.match(/<(.+)>/)?.[1]||fr.split('·')[0].trim();document.getElementById('cto').value=to;document.getElementById('csub').value='Re: '+sj;document.getElementById('cbody').textContent='';document.getElementById('comp').classList.add('vis');}
-function openCompose(){document.getElementById('cto').value='';document.getElementById('csub').value='';document.getElementById('cbody').textContent='';document.getElementById('comp').classList.add('vis');}
-function closeCompose(){document.getElementById('comp').classList.remove('vis');}
-async function sendEmail(){
-  const to=document.getElementById('cto').value.trim(),sj=document.getElementById('csub').value.trim(),bd=document.getElementById('cbody').textContent.trim();
-  if(!to||!sj||!bd){alert('يرجى تعبئة جميع الحقول');return;}
-  const msg=`To: ${to}\r\nSubject: =?UTF-8?B?${btoa(unescape(encodeURIComponent(sj)))}?=\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n${bd}`;
-  const enc=btoa(unescape(encodeURIComponent(msg))).replace(/\+/g,'-').replace(/\//g,'_');
-  const r=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send',{method:'POST',headers:{'Authorization':'Bearer '+gTok,'Content-Type':'application/json'},body:JSON.stringify({raw:enc})});
-  if(r.ok){closeCompose();alert('✅ تم الإرسال!');}else alert('❌ فشل الإرسال');
-}
 document.getElementById('hdate').textContent=new Date().toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long'});
 if(!AK){const k=prompt('أدخل مفتاح Claude API:');if(k){localStorage.setItem('claude_key',k);AK=k;}}
+if(hmTok)updBadges();
 renderT();updS();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js');
 </script>
