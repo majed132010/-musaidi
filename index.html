@@ -503,7 +503,7 @@
 </div>
 
 <script>
-const API_KEY = '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';
+const API_KEY = localStorage.getItem('or_key') || '';
 
 const PROJECTS_INFO = `
 أنت مساعد شخصي لأبو أمجد، مطور عربي مستقل يعمل على المشاريع التالية:
@@ -683,6 +683,11 @@ function quickAsk(q) {
 }
 
 document.getElementById('date-badge').textContent = new Date().toLocaleDateString('ar-SA', { weekday: 'long', day: 'numeric', month: 'long' });
+
+if (!API_KEY) {
+  const key = prompt('أدخل مفتاح OpenRouter (sk-or-...)');
+  if (key) { localStorage.setItem('or_key', key); location.reload(); }
+}
 
 renderTasks();
 updateStats();
