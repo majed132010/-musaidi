@@ -4,347 +4,413 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#7c6ef5">
+<meta name="theme-color" content="#f5c842">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="مساعدي">
 <title>مساعدي — أبو أمجد</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #0d0d12;
-  --bg2: #13131c;
-  --bg3: #1a1a26;
-  --bg4: #222233;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.12);
-  --text: #e8e6f0;
-  --text2: #8b89a0;
-  --text3: #5a5870;
-  --accent: #7c6ef5;
-  --accent2: #9d91f7;
-  --accent-bg: rgba(124,110,245,0.12);
-  --accent-border: rgba(124,110,245,0.3);
-  --green: #34d399;
-  --green-bg: rgba(52,211,153,0.1);
-  --red: #f87171;
-  --red-bg: rgba(248,113,113,0.1);
-  --amber: #fbbf24;
-  --amber-bg: rgba(251,191,36,0.1);
-  --radius: 10px;
-  --sidebar-w: 240px;
+  --gold: #f5c842;
+  --gold2: #ffd95a;
+  --gold3: #ffe98a;
+  --gold-dark: #c9a020;
+  --black: #0a0a0a;
+  --black2: #111111;
+  --black3: #1a1a1a;
+  --black4: #242424;
+  --text: #0a0a0a;
+  --text2: #2a2a2a;
+  --text3: #555555;
+  --border: rgba(245,200,66,0.2);
+  --border2: rgba(245,200,66,0.4);
+  --radius: 12px;
+  --nav-h: 64px;
+  --header-h: 52px;
 }
-body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 4px; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--black); color: var(--gold); display: flex; flex-direction: column; }
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 4px; }
 
-/* Header */
-.header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 0 20px; height: 52px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 200; }
-.header-left { display: flex; align-items: center; gap: 12px; }
-.menu-btn { width: 34px; height: 34px; background: none; border: 1px solid var(--border); border-radius: 8px; color: var(--text2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.2s; }
-.menu-btn:hover { background: var(--bg3); color: var(--text); }
-.logo { display: flex; align-items: center; gap: 8px; }
-.logo-icon { width: 28px; height: 28px; background: linear-gradient(135deg, #7c6ef5, #a78bfa); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
-.logo-text { font-size: 15px; font-weight: 600; }
-.header-right { display: flex; align-items: center; gap: 8px; }
-.date-badge { font-size: 11px; color: var(--text2); background: var(--bg3); border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; }
-.view-tabs { display: flex; gap: 2px; background: var(--bg3); padding: 3px; border-radius: 9px; border: 1px solid var(--border); }
-.view-tab { padding: 4px 12px; border-radius: 7px; font-size: 12px; cursor: pointer; border: none; background: none; color: var(--text2); transition: all 0.15s; }
-.view-tab.active { background: var(--accent); color: white; }
+/* ── Header ── */
+.header {
+  height: var(--header-h);
+  background: var(--black2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  flex-shrink: 0;
+  z-index: 100;
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-icon {
+  width: 32px; height: 32px;
+  background: var(--gold);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+}
+.logo-text { font-size: 16px; font-weight: 700; color: var(--gold); }
+.header-date { font-size: 11px; color: var(--gold-dark); background: var(--black3); border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; }
 
-/* Shell */
-.app-shell { display: flex; flex: 1; height: calc(100vh - 52px); overflow: hidden; }
+/* ── Body ── */
+.app-body { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
 
-/* Sidebar */
-.sidebar { width: var(--sidebar-w); background: var(--bg2); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; transition: width 0.25s ease, opacity 0.25s ease; flex-shrink: 0; }
-.sidebar.collapsed { width: 0; opacity: 0; pointer-events: none; }
-.sidebar-inner { width: var(--sidebar-w); display: flex; flex-direction: column; height: 100%; overflow-y: auto; padding: 12px 8px; }
-.sidebar-label { font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 8px 4px; }
-.proj-btn { width: 100%; display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 8px; border: none; background: none; color: var(--text2); font-size: 13px; cursor: pointer; text-align: right; transition: all 0.15s; }
-.proj-btn:hover { background: var(--bg3); color: var(--text); }
-.proj-btn.active { background: var(--accent-bg); color: var(--accent2); border: 1px solid var(--accent-border); }
-.proj-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.proj-count { margin-right: auto; font-size: 10px; background: var(--bg4); color: var(--text3); padding: 1px 6px; border-radius: 10px; min-width: 18px; text-align: center; }
-
-/* Main */
-.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-.view { display: none; flex: 1; overflow: hidden; flex-direction: column; }
+/* ── Views ── */
+.view { display: none; flex: 1; flex-direction: column; overflow: hidden; height: 100%; }
 .view.active { display: flex; }
 
-/* Tasks */
-.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 11px 13px; }
-.stat-label { font-size: 10px; color: var(--text3); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
-.stat-value { font-size: 20px; font-weight: 600; }
-.stat-sub { font-size: 10px; color: var(--text3); margin-top: 2px; }
-.tasks-container { flex: 1; overflow-y: auto; padding: 14px; }
-.tasks-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-.tasks-title { font-size: 13px; font-weight: 600; color: var(--text2); }
-.add-btn { font-size: 12px; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border2); background: var(--bg3); color: var(--text2); cursor: pointer; transition: all 0.15s; }
-.add-btn:hover { background: var(--bg4); color: var(--text); border-color: var(--accent-border); }
-.add-form { background: var(--bg2); border: 1px solid var(--accent-border); border-radius: var(--radius); padding: 12px; margin-bottom: 10px; display: none; }
-.add-form.visible { display: block; }
-.add-form input, .add-form select { width: 100%; padding: 7px 10px; border: 1px solid var(--border2); border-radius: 7px; font-size: 12px; font-family: inherit; background: var(--bg3); color: var(--text); margin-bottom: 7px; outline: none; transition: border-color 0.15s; }
-.add-form input:focus, .add-form select:focus { border-color: var(--accent); }
-.add-form select option { background: var(--bg3); }
-.form-row { display: flex; gap: 7px; }
-.form-row select { flex: 1; }
-.form-btns { display: flex; gap: 7px; justify-content: flex-end; margin-top: 4px; }
-.btn-save { padding: 6px 14px; background: var(--accent); color: white; border: none; border-radius: 7px; font-size: 12px; cursor: pointer; font-family: inherit; }
-.btn-cancel { padding: 6px 10px; background: none; border: 1px solid var(--border2); border-radius: 7px; font-size: 12px; cursor: pointer; font-family: inherit; color: var(--text2); }
-.task-item { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 6px; display: flex; align-items: flex-start; gap: 9px; transition: border-color 0.15s; }
-.task-item:hover { border-color: var(--border2); }
-.task-check { width: 17px; height: 17px; border: 1.5px solid var(--border2); border-radius: 5px; flex-shrink: 0; margin-top: 1px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; transition: all 0.15s; }
-.task-check.done { background: var(--green); border-color: var(--green); color: #0d0d12; }
-.task-content { flex: 1; }
-.task-title { font-size: 13px; font-weight: 500; margin-bottom: 5px; }
-.task-title.done { text-decoration: line-through; color: var(--text3); font-weight: 400; }
-.task-meta { display: flex; gap: 5px; flex-wrap: wrap; }
-.tag { font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 500; }
-.tag-high { background: var(--red-bg); color: var(--red); }
-.tag-mid { background: var(--amber-bg); color: var(--amber); }
-.tag-low { background: var(--green-bg); color: var(--green); }
-.tag-project { background: var(--accent-bg); color: var(--accent2); }
-.task-del { font-size: 14px; color: var(--text3); cursor: pointer; padding: 2px 4px; opacity: 0; transition: opacity 0.15s; }
-.task-item:hover .task-del { opacity: 1; }
+/* ── Bottom Nav ── */
+.bottom-nav {
+  height: var(--nav-h);
+  background: var(--black2);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-shrink: 0;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.nav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: none;
+  background: none;
+  color: #444;
+  cursor: pointer;
+  padding: 8px 0;
+  transition: color 0.2s;
+  font-family: inherit;
+}
+.nav-btn.active { color: var(--gold); }
+.nav-icon { font-size: 22px; }
+.nav-label { font-size: 10px; font-weight: 600; }
+.nav-btn.active .nav-icon { filter: drop-shadow(0 0 6px rgba(245,200,66,0.6)); }
 
-/* Chat */
-.chat-view { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-.chat-messages { flex: 1; overflow-y: auto; padding: 24px 20px; display: flex; flex-direction: column; gap: 16px; }
-.chat-welcome { text-align: center; padding: 40px 20px; color: var(--text3); }
-.chat-welcome-icon { font-size: 48px; margin-bottom: 12px; display: block; }
-.chat-welcome h2 { font-size: 18px; color: var(--text2); font-weight: 500; margin-bottom: 6px; }
-.chat-welcome p { font-size: 13px; }
-.chat-suggestions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
-.suggestion-btn { font-size: 12px; padding: 7px 13px; border-radius: 20px; border: 1px solid var(--border2); background: var(--bg2); color: var(--text2); cursor: pointer; transition: all 0.15s; }
-.suggestion-btn:hover { background: var(--bg3); color: var(--text); border-color: var(--accent-border); }
-.msg { max-width: 72%; display: flex; flex-direction: column; gap: 4px; }
+/* ── CHAT (الرئيسية) ── */
+.chat-view { background: var(--black); }
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.chat-welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 10px;
+  padding: 30px 20px;
+}
+.welcome-circle {
+  width: 80px; height: 80px;
+  background: var(--gold);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+.welcome-title { font-size: 22px; font-weight: 700; color: var(--gold); }
+.welcome-sub { font-size: 13px; color: #666; text-align: center; }
+.suggestions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 8px; }
+.sug-btn {
+  font-size: 12px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border2);
+  background: var(--black3);
+  color: var(--gold);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.sug-btn:hover, .sug-btn:active { background: var(--gold); color: var(--black); }
+
+.msg { max-width: 80%; display: flex; flex-direction: column; gap: 3px; }
 .msg-user { align-self: flex-start; }
 .msg-ai { align-self: flex-end; }
-.msg-bubble { padding: 10px 14px; border-radius: 14px; font-size: 13.5px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
-.msg-user .msg-bubble { background: var(--accent); color: white; border-radius: 14px 14px 4px 14px; }
-.msg-ai .msg-bubble { background: var(--bg2); border: 1px solid var(--border); color: var(--text); border-radius: 14px 14px 14px 4px; }
-.msg-thinking .msg-bubble { background: var(--bg2); border: 1px solid var(--border); color: var(--text3); border-radius: 14px 14px 14px 4px; }
-.msg-time { font-size: 10px; color: var(--text3); padding: 0 4px; }
+.msg-bubble { padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+.msg-user .msg-bubble { background: var(--gold); color: var(--black); border-radius: 16px 16px 4px 16px; font-weight: 500; }
+.msg-ai .msg-bubble { background: var(--black3); border: 1px solid var(--border); color: var(--gold); border-radius: 16px 16px 16px 4px; }
+.msg-thinking .msg-bubble { background: var(--black3); border: 1px solid var(--border); color: #555; border-radius: 16px 16px 16px 4px; }
+.msg-time { font-size: 10px; color: #444; padding: 0 4px; }
 .msg-user .msg-time { text-align: right; }
-.chat-input-area { padding: 14px 20px; border-top: 1px solid var(--border); background: var(--bg2); display: flex; gap: 8px; align-items: flex-end; }
-.chat-input { flex: 1; background: var(--bg3); border: 1px solid var(--border2); border-radius: 12px; padding: 10px 14px; font-size: 13.5px; font-family: inherit; color: var(--text); resize: none; outline: none; max-height: 120px; line-height: 1.5; transition: border-color 0.15s; }
-.chat-input:focus { border-color: var(--accent); }
-.chat-input::placeholder { color: var(--text3); }
-.chat-send { width: 38px; height: 38px; background: var(--accent); border: none; border-radius: 10px; color: white; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
-.chat-send:hover { background: var(--accent2); }
-.chat-send:disabled { opacity: 0.4; cursor: default; }
-.typing-dots { display: flex; gap: 4px; padding: 4px 0; }
-.typing-dots span { width: 6px; height: 6px; background: var(--text3); border-radius: 50%; animation: bounce 1.2s infinite; }
+
+.chat-input-area {
+  padding: 10px 12px;
+  background: var(--black2);
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+.chat-input {
+  flex: 1;
+  background: var(--black3);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--gold);
+  resize: none;
+  outline: none;
+  max-height: 100px;
+  line-height: 1.5;
+}
+.chat-input::placeholder { color: #444; }
+.chat-input:focus { border-color: var(--gold); }
+.chat-send {
+  width: 40px; height: 40px;
+  background: var(--gold);
+  border: none;
+  border-radius: 50%;
+  color: var(--black);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.chat-send:disabled { opacity: 0.4; }
+.typing-dots { display: flex; gap: 4px; padding: 2px 0; }
+.typing-dots span { width: 6px; height: 6px; background: var(--gold-dark); border-radius: 50%; animation: bounce 1.2s infinite; }
 .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
 .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes bounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+@keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
 
-/* Gmail View */
-.gmail-view { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-.gmail-toolbar { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg2); flex-shrink: 0; flex-wrap: wrap; }
-.gmail-btn { font-size: 12px; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border2); background: var(--bg3); color: var(--text2); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
-.gmail-btn:hover { background: var(--bg4); color: var(--text); }
-.gmail-btn.primary { background: var(--accent); color: white; border-color: var(--accent); }
-.gmail-btn.primary:hover { background: var(--accent2); }
-.gmail-btn.danger { background: var(--red-bg); color: var(--red); border-color: rgba(248,113,113,0.3); }
-.gmail-status { font-size: 11px; color: var(--text3); margin-right: auto; }
-.gmail-connected { color: var(--green); }
+/* ── TASKS ── */
+.tasks-view { background: var(--black); }
+.stats-row { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; padding: 12px; flex-shrink: 0; }
+.stat-card { background: var(--black2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; }
+.stat-label { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+.stat-value { font-size: 24px; font-weight: 700; color: var(--gold); }
+.stat-sub { font-size: 10px; color: #444; margin-top: 2px; }
+.tasks-container { flex: 1; overflow-y: auto; padding: 0 12px 12px; }
+.tasks-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 0 10px; }
+.tasks-title { font-size: 13px; font-weight: 600; color: #555; }
+.add-btn { font-size: 12px; padding: 7px 14px; border-radius: 20px; border: 1px solid var(--border2); background: var(--gold); color: var(--black); cursor: pointer; font-weight: 600; font-family: inherit; }
+.add-form { background: var(--black2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 12px; margin-bottom: 10px; display: none; }
+.add-form.visible { display: block; }
+.add-form input, .add-form select { width: 100%; padding: 8px 12px; border: 1px solid var(--border2); border-radius: 8px; font-size: 13px; font-family: inherit; background: var(--black3); color: var(--gold); margin-bottom: 8px; outline: none; }
+.add-form input:focus, .add-form select:focus { border-color: var(--gold); }
+.add-form select option { background: var(--black3); }
+.form-row { display: flex; gap: 7px; }
+.form-row select { flex: 1; }
+.form-btns { display: flex; gap: 7px; justify-content: flex-end; }
+.btn-save { padding: 7px 16px; background: var(--gold); color: var(--black); border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.btn-cancel { padding: 7px 12px; background: none; border: 1px solid var(--border2); border-radius: 8px; font-size: 13px; cursor: pointer; font-family: inherit; color: #555; }
+.task-item { background: var(--black2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 10px; }
+.task-item:active { border-color: var(--gold); }
+.task-check { width: 20px; height: 20px; border: 2px solid var(--border2); border-radius: 6px; flex-shrink: 0; margin-top: 1px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; transition: all 0.15s; }
+.task-check.done { background: var(--gold); border-color: var(--gold); color: var(--black); font-weight: 700; }
+.task-content { flex: 1; }
+.task-title { font-size: 13.5px; font-weight: 500; color: var(--gold); margin-bottom: 6px; line-height: 1.4; }
+.task-title.done { text-decoration: line-through; color: #444; }
+.task-meta { display: flex; gap: 5px; flex-wrap: wrap; }
+.tag { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+.tag-high { background: rgba(248,113,113,0.15); color: #f87171; }
+.tag-mid { background: rgba(251,191,36,0.15); color: #fbbf24; }
+.tag-low { background: rgba(52,211,153,0.15); color: #34d399; }
+.tag-project { background: rgba(245,200,66,0.15); color: var(--gold); }
+.task-del { font-size: 16px; color: #333; cursor: pointer; padding: 2px 4px; flex-shrink: 0; }
+
+/* ── GMAIL ── */
+.gmail-view { background: var(--black); }
+.gmail-toolbar { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--border); background: var(--black2); flex-shrink: 0; flex-wrap: wrap; }
+.gmail-btn { font-size: 12px; padding: 7px 12px; border-radius: 20px; border: 1px solid var(--border2); background: var(--black3); color: var(--gold); cursor: pointer; font-family: inherit; transition: all 0.15s; }
+.gmail-btn.primary { background: var(--gold); color: var(--black); border-color: var(--gold); font-weight: 600; }
+.gmail-btn.danger { background: rgba(248,113,113,0.1); color: #f87171; border-color: rgba(248,113,113,0.3); }
+.gmail-status { font-size: 11px; color: #444; margin-right: auto; }
+.gmail-connected { color: #34d399; }
 .emails-list { flex: 1; overflow-y: auto; }
-.email-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; position: relative; }
-.email-item:hover { background: var(--bg2); }
-.email-item.unread { background: rgba(124,110,245,0.04); }
-.email-item.selected { background: var(--accent-bg); }
-.email-check { width: 16px; height: 16px; border: 1.5px solid var(--border2); border-radius: 4px; flex-shrink: 0; margin-top: 2px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; }
-.email-check.checked { background: var(--accent); border-color: var(--accent); color: white; }
-.email-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+.email-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; position: relative; }
+.email-item:active { background: var(--black3); }
+.email-item.unread { background: rgba(245,200,66,0.04); }
+.email-check { width: 18px; height: 18px; border: 1.5px solid var(--border2); border-radius: 4px; flex-shrink: 0; margin-top: 3px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+.email-check.checked { background: var(--gold); border-color: var(--gold); color: var(--black); font-weight: 700; }
+.email-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; color: var(--black); }
 .email-content { flex: 1; min-width: 0; }
-.email-header { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
-.email-from { font-size: 13px; font-weight: 600; color: var(--text); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.email-item:not(.unread) .email-from { font-weight: 400; color: var(--text2); }
-.email-date { font-size: 11px; color: var(--text3); flex-shrink: 0; }
-.email-subject { font-size: 12.5px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
-.email-item:not(.unread) .email-subject { color: var(--text2); }
-.email-snippet { font-size: 11.5px; color: var(--text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.email-unread-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); }
+.email-header { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+.email-from { font-size: 13px; font-weight: 600; color: var(--gold); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.email-item:not(.unread) .email-from { font-weight: 400; color: #555; }
+.email-date { font-size: 10px; color: #444; flex-shrink: 0; }
+.email-subject { font-size: 12px; color: var(--gold); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+.email-item:not(.unread) .email-subject { color: #555; }
+.email-snippet { font-size: 11px; color: #444; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.email-unread-dot { width: 7px; height: 7px; background: var(--gold); border-radius: 50%; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); }
 
-/* Email detail */
-.email-detail { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg); z-index: 50; display: none; flex-direction: column; overflow: hidden; }
+.email-detail { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--black); z-index: 200; display: none; flex-direction: column; }
 .email-detail.visible { display: flex; }
-.email-detail-header { padding: 16px 20px; border-bottom: 1px solid var(--border); background: var(--bg2); }
-.email-detail-back { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); cursor: pointer; margin-bottom: 12px; background: none; border: none; }
-.email-detail-back:hover { color: var(--text); }
-.email-detail-subject { font-size: 17px; font-weight: 600; margin-bottom: 10px; }
-.email-detail-meta { display: flex; align-items: center; gap: 10px; }
-.email-detail-from { font-size: 13px; color: var(--text2); }
-.email-detail-date { font-size: 11px; color: var(--text3); margin-right: auto; }
-.email-detail-actions { display: flex; gap: 6px; }
-.email-detail-body { flex: 1; overflow-y: auto; padding: 20px; font-size: 13.5px; line-height: 1.7; color: var(--text2); }
+.email-detail-header { padding: 14px 16px; border-bottom: 1px solid var(--border); background: var(--black2); flex-shrink: 0; }
+.email-detail-back { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--gold); cursor: pointer; background: none; border: none; margin-bottom: 10px; font-family: inherit; }
+.email-detail-subject { font-size: 16px; font-weight: 700; color: var(--gold); margin-bottom: 8px; line-height: 1.3; }
+.email-detail-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.email-detail-from { font-size: 12px; color: #666; flex: 1; }
+.email-detail-date { font-size: 11px; color: #444; }
+.email-detail-actions { display: flex; gap: 6px; margin-top: 8px; }
+.email-detail-body { flex: 1; overflow-y: auto; padding: 16px; font-size: 13.5px; line-height: 1.7; color: #888; }
 
-/* Compose */
-.compose-modal { position: fixed; bottom: 20px; left: 20px; width: 480px; background: var(--bg2); border: 1px solid var(--border2); border-radius: 14px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); z-index: 300; display: none; flex-direction: column; overflow: hidden; }
+.compose-modal { position: fixed; bottom: calc(var(--nav-h) + 8px); left: 12px; right: 12px; background: var(--black2); border: 1px solid var(--border2); border-radius: 16px; z-index: 300; display: none; flex-direction: column; overflow: hidden; box-shadow: 0 -10px 40px rgba(245,200,66,0.1); }
 .compose-modal.visible { display: flex; }
-.compose-header { padding: 12px 16px; background: var(--bg3); display: flex; align-items: center; justify-content: space-between; }
-.compose-title { font-size: 13px; font-weight: 600; }
-.compose-close { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 18px; }
-.compose-fields { padding: 10px 16px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; }
+.compose-header { padding: 12px 16px; background: var(--gold); display: flex; align-items: center; justify-content: space-between; }
+.compose-title { font-size: 14px; font-weight: 700; color: var(--black); }
+.compose-close { background: none; border: none; color: var(--black); cursor: pointer; font-size: 20px; font-weight: 700; }
+.compose-fields { padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; }
 .compose-field { display: flex; align-items: center; gap: 8px; }
-.compose-field-label { font-size: 11px; color: var(--text3); width: 30px; flex-shrink: 0; }
-.compose-field input { flex: 1; background: none; border: none; outline: none; font-size: 13px; font-family: inherit; color: var(--text); padding: 4px 0; }
-.compose-body { min-height: 160px; padding: 12px 16px; outline: none; font-size: 13px; font-family: inherit; color: var(--text); line-height: 1.6; }
-.compose-footer { padding: 10px 16px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; }
+.compose-field-label { font-size: 11px; color: #555; width: 32px; flex-shrink: 0; }
+.compose-field input { flex: 1; background: none; border: none; outline: none; font-size: 13px; font-family: inherit; color: var(--gold); padding: 4px 0; }
+.compose-field input::placeholder { color: #333; }
+.compose-body { min-height: 120px; padding: 12px 14px; outline: none; font-size: 13px; font-family: inherit; color: var(--gold); line-height: 1.6; }
+.compose-body:empty:before { content: attr(data-placeholder); color: #333; }
+.compose-footer { padding: 10px 14px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; }
 
-/* Empty state */
-.empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text3); gap: 12px; padding: 40px; }
+.empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #333; gap: 10px; padding: 40px; }
 .empty-state-icon { font-size: 48px; }
-.empty-state p { font-size: 13px; text-align: center; }
-
-@media (max-width: 700px) {
-  .sidebar { display: none; }
-  .stats-row { grid-template-columns: repeat(2, 1fr); }
-  .msg { max-width: 88%; }
-  .compose-modal { width: calc(100% - 32px); left: 16px; }
-}
+.empty-state p { font-size: 13px; text-align: center; color: #444; }
 </style>
 </head>
 <body>
 
+<!-- Header -->
 <div class="header">
-  <div class="header-left">
-    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-    <div class="logo">
-      <div class="logo-icon">🤖</div>
-      <span class="logo-text">مساعدي</span>
-    </div>
+  <div class="logo">
+    <div class="logo-icon">🤖</div>
+    <span class="logo-text">مساعدي</span>
   </div>
-  <div class="header-right">
-    <div class="view-tabs">
-      <button class="view-tab active" onclick="switchView('tasks',this)">المهام</button>
-      <button class="view-tab" onclick="switchView('gmail',this)">📧 Gmail</button>
-      <button class="view-tab" onclick="switchView('chat',this)">الدردشة</button>
-    </div>
-    <div class="date-badge" id="date-badge"></div>
-  </div>
+  <div class="header-date" id="date-badge"></div>
 </div>
 
-<div class="app-shell">
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-inner">
-      <div class="sidebar-label">المشاريع</div>
-      <button class="proj-btn active" onclick="filterProject('all',this)"><div class="proj-dot" style="background:#7c6ef5"></div>الكل<span class="proj-count" id="count-all">0</span></button>
-      <button class="proj-btn" onclick="filterProject('الأرض',this)"><div class="proj-dot" style="background:#34d399"></div>الأرض<span class="proj-count" id="count-الأرض">0</span></button>
-      <button class="proj-btn" onclick="filterProject('عوالم',this)"><div class="proj-dot" style="background:#60a5fa"></div>عوالم<span class="proj-count" id="count-عوالم">0</span></button>
-      <button class="proj-btn" onclick="filterProject('بنك المعلومات',this)"><div class="proj-dot" style="background:#fb923c"></div>بنك المعلومات<span class="proj-count" id="count-بنك المعلومات">0</span></button>
-      <button class="proj-btn" onclick="filterProject('Konkan',this)"><div class="proj-dot" style="background:#fbbf24"></div>Konkan<span class="proj-count" id="count-Konkan">0</span></button>
-      <button class="proj-btn" onclick="filterProject('ULTRAS HUB',this)"><div class="proj-dot" style="background:#f472b6"></div>ULTRAS HUB<span class="proj-count" id="count-ULTRAS HUB">0</span></button>
-      <button class="proj-btn" onclick="filterProject('مساعدي',this)"><div class="proj-dot" style="background:#a78bfa"></div>مساعدي<span class="proj-count" id="count-مساعدي">0</span></button>
-      <div class="sidebar-label" style="margin-top:8px">أخرى</div>
-      <button class="proj-btn" onclick="filterProject('شخصي',this)"><div class="proj-dot" style="background:#6b7280"></div>شخصي<span class="proj-count" id="count-شخصي">0</span></button>
+<!-- App Body -->
+<div class="app-body">
+
+  <!-- CHAT VIEW -->
+  <div class="view chat-view active" id="view-chat">
+    <div class="chat-messages" id="chat-messages">
+      <div class="chat-welcome">
+        <div class="welcome-circle">🤖</div>
+        <div class="welcome-title">مرحباً أبو أمجد</div>
+        <div class="welcome-sub">مساعدك الشخصي — اسألني أي شيء</div>
+        <div class="suggestions">
+          <button class="sug-btn" onclick="sendSug('ما أولويات اليوم؟')">أولويات اليوم</button>
+          <button class="sug-btn" onclick="sendSug('آخر تحديثات الأرض؟')">تحديثات الأرض</button>
+          <button class="sug-btn" onclick="sendSug('كم مهمة متبقية؟')">المهام المتبقية</button>
+          <button class="sug-btn" onclick="sendSug('ساعدني في مشكلة تقنية')">مشكلة تقنية</button>
+        </div>
+      </div>
+    </div>
+    <div class="chat-input-area">
+      <textarea class="chat-input" id="chat-input" placeholder="اكتب رسالة..." rows="1"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"
+        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
+      <button class="chat-send" id="chat-send-btn" onclick="sendChat()">↑</button>
     </div>
   </div>
 
-  <div class="main">
-
-    <!-- TASKS -->
-    <div class="view active" id="view-tasks" style="flex-direction:column">
-      <div class="stats-row">
-        <div class="stat-card"><div class="stat-label">إجمالي</div><div class="stat-value" id="stat-total">0</div><div class="stat-sub">المهام</div></div>
-        <div class="stat-card"><div class="stat-label">مكتملة</div><div class="stat-value" style="color:var(--green)" id="stat-done">0</div><div class="stat-sub" id="stat-pct">0%</div></div>
-        <div class="stat-card"><div class="stat-label">عالية</div><div class="stat-value" style="color:var(--red)" id="stat-high">0</div><div class="stat-sub">الأولوية</div></div>
-        <div class="stat-card"><div class="stat-label">متبقية</div><div class="stat-value" id="stat-pending">0</div><div class="stat-sub">غير مكتملة</div></div>
-      </div>
-      <div class="tasks-container">
-        <div class="tasks-header">
-          <div class="tasks-title" id="tasks-title">كل المهام</div>
-          <button class="add-btn" onclick="toggleForm()">+ مهمة</button>
-        </div>
-        <div class="add-form" id="add-form">
-          <input type="text" id="task-input" placeholder="اكتب المهمة..." />
-          <div class="form-row">
-            <select id="task-project">
-              <option value="الأرض">الأرض</option>
-              <option value="عوالم">عوالم</option>
-              <option value="بنك المعلومات">بنك المعلومات</option>
-              <option value="Konkan">Konkan</option>
-              <option value="ULTRAS HUB">ULTRAS HUB</option>
-              <option value="مساعدي">مساعدي</option>
-              <option value="شخصي">شخصي</option>
-            </select>
-            <select id="task-priority">
-              <option value="high">عالية</option>
-              <option value="mid">متوسطة</option>
-              <option value="low">منخفضة</option>
-            </select>
-          </div>
-          <div class="form-btns">
-            <button class="btn-cancel" onclick="toggleForm()">إلغاء</button>
-            <button class="btn-save" onclick="addTask()">حفظ</button>
-          </div>
-        </div>
-        <div id="tasks-list"></div>
-      </div>
+  <!-- TASKS VIEW -->
+  <div class="view tasks-view" id="view-tasks">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-label">إجمالي</div><div class="stat-value" id="stat-total">0</div><div class="stat-sub">المهام</div></div>
+      <div class="stat-card"><div class="stat-label">مكتملة</div><div class="stat-value" id="stat-done">0</div><div class="stat-sub" id="stat-pct">0%</div></div>
+      <div class="stat-card"><div class="stat-label">عالية الأولوية</div><div class="stat-value" id="stat-high">0</div><div class="stat-sub">تحتاج انتباه</div></div>
+      <div class="stat-card"><div class="stat-label">متبقية</div><div class="stat-value" id="stat-pending">0</div><div class="stat-sub">غير مكتملة</div></div>
     </div>
-
-    <!-- GMAIL -->
-    <div class="view gmail-view" id="view-gmail" style="position:relative">
-      <div class="gmail-toolbar">
-        <button class="gmail-btn primary" id="gmail-auth-btn" onclick="gmailSignIn()">🔑 تسجيل الدخول بـ Google</button>
-        <button class="gmail-btn" id="gmail-refresh-btn" onclick="loadEmails()" style="display:none">🔄 تحديث</button>
-        <button class="gmail-btn" id="gmail-compose-btn" onclick="openCompose()" style="display:none">✏️ إنشاء</button>
-        <button class="gmail-btn danger" id="gmail-delete-btn" onclick="deleteSelected()" style="display:none">🗑️ حذف المحدد</button>
-        <span class="gmail-status" id="gmail-status">غير مرتبط</span>
+    <div class="tasks-container">
+      <div class="tasks-header">
+        <div class="tasks-title">كل المهام</div>
+        <button class="add-btn" onclick="toggleForm()">+ مهمة</button>
       </div>
-      <div id="emails-container">
-        <div class="empty-state">
-          <div class="empty-state-icon">📧</div>
-          <p>سجّل دخولك بـ Google لعرض رسائلك</p>
+      <div class="add-form" id="add-form">
+        <input type="text" id="task-input" placeholder="اكتب المهمة..." />
+        <div class="form-row">
+          <select id="task-project">
+            <option value="الأرض">الأرض</option>
+            <option value="عوالم">عوالم</option>
+            <option value="بنك المعلومات">بنك المعلومات</option>
+            <option value="Konkan">Konkan</option>
+            <option value="ULTRAS HUB">ULTRAS HUB</option>
+            <option value="مساعدي">مساعدي</option>
+            <option value="شخصي">شخصي</option>
+          </select>
+          <select id="task-priority">
+            <option value="high">عالية</option>
+            <option value="mid">متوسطة</option>
+            <option value="low">منخفضة</option>
+          </select>
+        </div>
+        <div class="form-btns">
+          <button class="btn-cancel" onclick="toggleForm()">إلغاء</button>
+          <button class="btn-save" onclick="addTask()">حفظ</button>
         </div>
       </div>
-      <!-- Email Detail -->
-      <div class="email-detail" id="email-detail">
-        <div class="email-detail-header">
-          <button class="email-detail-back" onclick="closeEmailDetail()">← رجوع</button>
-          <div class="email-detail-subject" id="detail-subject"></div>
-          <div class="email-detail-meta">
-            <div class="email-detail-from" id="detail-from"></div>
-            <div class="email-detail-date" id="detail-date"></div>
-            <div class="email-detail-actions">
-              <button class="gmail-btn" onclick="replyEmail()">↩️ رد</button>
-              <button class="gmail-btn danger" onclick="deleteCurrentEmail()">🗑️ حذف</button>
-            </div>
-          </div>
-        </div>
-        <div class="email-detail-body" id="detail-body"></div>
-      </div>
+      <div id="tasks-list"></div>
     </div>
-
-    <!-- CHAT -->
-    <div class="view chat-view" id="view-chat">
-      <div class="chat-messages" id="chat-messages">
-        <div class="chat-welcome">
-          <span class="chat-welcome-icon">✦</span>
-          <h2>مرحباً أبو أمجد</h2>
-          <p>كيف أقدر أساعدك اليوم؟</p>
-          <div class="chat-suggestions">
-            <button class="suggestion-btn" onclick="sendSuggestion('ما هي أولويات اليوم؟')">أولويات اليوم</button>
-            <button class="suggestion-btn" onclick="sendSuggestion('ما آخر تحديثات الأرض؟')">آخر تحديثات الأرض</button>
-            <button class="suggestion-btn" onclick="sendSuggestion('ساعدني في مشكلة تقنية')">مشكلة تقنية</button>
-            <button class="suggestion-btn" onclick="sendSuggestion('كم المهام المتبقية؟')">المهام المتبقية</button>
-          </div>
-        </div>
-      </div>
-      <div class="chat-input-area">
-        <textarea class="chat-input" id="chat-input" placeholder="اكتب رسالة..." rows="1"
-          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"
-          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
-        <button class="chat-send" id="chat-send-btn" onclick="sendChat()">↑</button>
-      </div>
-    </div>
-
   </div>
+
+  <!-- GMAIL VIEW -->
+  <div class="view gmail-view" id="view-gmail" style="position:relative">
+    <div class="gmail-toolbar">
+      <button class="gmail-btn primary" id="gmail-auth-btn" onclick="gmailSignIn()">🔑 تسجيل الدخول</button>
+      <button class="gmail-btn" id="gmail-refresh-btn" onclick="loadEmails()" style="display:none">🔄 تحديث</button>
+      <button class="gmail-btn" id="gmail-compose-btn" onclick="openCompose()" style="display:none">✏️ إنشاء</button>
+      <button class="gmail-btn danger" id="gmail-delete-btn" onclick="deleteSelected()" style="display:none">🗑️ حذف</button>
+      <span class="gmail-status" id="gmail-status">غير مرتبط</span>
+    </div>
+    <div class="emails-list" id="emails-container">
+      <div class="empty-state">
+        <div class="empty-state-icon">📧</div>
+        <p>سجّل دخولك لعرض رسائلك</p>
+      </div>
+    </div>
+    <div class="email-detail" id="email-detail">
+      <div class="email-detail-header">
+        <button class="email-detail-back" onclick="closeEmailDetail()">← رجوع</button>
+        <div class="email-detail-subject" id="detail-subject"></div>
+        <div class="email-detail-meta">
+          <div class="email-detail-from" id="detail-from"></div>
+          <div class="email-detail-date" id="detail-date"></div>
+        </div>
+        <div class="email-detail-actions">
+          <button class="gmail-btn" onclick="replyEmail()">↩️ رد</button>
+          <button class="gmail-btn danger" onclick="deleteCurrentEmail()">🗑️ حذف</button>
+        </div>
+      </div>
+      <div class="email-detail-body" id="detail-body"></div>
+    </div>
+  </div>
+
 </div>
 
-<!-- Compose Modal -->
+<!-- Bottom Nav -->
+<div class="bottom-nav">
+  <button class="nav-btn active" onclick="switchView('chat',this)">
+    <span class="nav-icon">💬</span>
+    <span class="nav-label">الدردشة</span>
+  </button>
+  <button class="nav-btn" onclick="switchView('tasks',this)">
+    <span class="nav-icon">✅</span>
+    <span class="nav-label">المهام</span>
+  </button>
+  <button class="nav-btn" onclick="switchView('gmail',this)">
+    <span class="nav-icon">📧</span>
+    <span class="nav-label">Gmail</span>
+  </button>
+</div>
+
+<!-- Compose -->
 <div class="compose-modal" id="compose-modal">
   <div class="compose-header">
     <span class="compose-title">رسالة جديدة</span>
@@ -377,8 +443,6 @@ const PROJECTS_INFO = `أنت مساعد شخصي لأبو أمجد، مطور �
 let API_KEY = localStorage.getItem('claude_key') || '';
 let tasks = JSON.parse(localStorage.getItem('musaidi_tasks') || '[]');
 let chatHistory = [];
-let currentFilter = 'all';
-let sidebarOpen = true;
 let gmailToken = null;
 let emails = [];
 let selectedEmails = new Set();
@@ -386,11 +450,11 @@ let currentEmailId = null;
 
 if (!tasks.length) {
   tasks = [
-    { id: 1, title: 'نقل metadata الفئات السبع إلى EXTRA_CATEGORIES', project: 'الأرض', priority: 'high', done: false },
-    { id: 2, title: 'إصلاح bug الـ #contentArea في عوالم', project: 'عوالم', priority: 'mid', done: false },
-    { id: 3, title: 'اختبار Agora بعد تغيير الشهادة', project: 'الأرض', priority: 'mid', done: false },
-    { id: 4, title: 'تجربة قنوات يوتيوب الـ 13 الجديدة', project: 'ULTRAS HUB', priority: 'low', done: false },
-    { id: 5, title: 'ربط Gmail بمساعدي ✓', project: 'مساعدي', priority: 'high', done: true },
+    { id:1, title:'نقل metadata الفئات السبع إلى EXTRA_CATEGORIES', project:'الأرض', priority:'high', done:false },
+    { id:2, title:'إصلاح bug الـ #contentArea في عوالم', project:'عوالم', priority:'mid', done:false },
+    { id:3, title:'اختبار Agora بعد تغيير الشهادة', project:'الأرض', priority:'mid', done:false },
+    { id:4, title:'تجربة قنوات يوتيوب الـ 13 الجديدة', project:'ULTRAS HUB', priority:'low', done:false },
+    { id:5, title:'ربط Gmail بمساعدي', project:'مساعدي', priority:'high', done:true },
   ];
   saveTasks();
 }
@@ -399,9 +463,8 @@ function saveTasks() { localStorage.setItem('musaidi_tasks', JSON.stringify(task
 
 function renderTasks() {
   const list = document.getElementById('tasks-list');
-  const filtered = currentFilter === 'all' ? tasks : tasks.filter(t => t.project === currentFilter);
-  if (!filtered.length) { list.innerHTML = '<div style="text-align:center;color:var(--text3);padding:40px;font-size:13px">لا توجد مهام</div>'; return; }
-  list.innerHTML = filtered.map(t => `
+  if (!tasks.length) { list.innerHTML='<div style="text-align:center;color:#333;padding:40px;font-size:13px">لا توجد مهام</div>'; return; }
+  list.innerHTML = tasks.map(t=>`
     <div class="task-item">
       <div class="task-check ${t.done?'done':''}" onclick="toggleTask(${t.id})">${t.done?'✓':''}</div>
       <div class="task-content">
@@ -416,199 +479,44 @@ function renderTasks() {
 }
 
 function updateStats() {
-  const total = tasks.length, done = tasks.filter(t=>t.done).length, high = tasks.filter(t=>t.priority==='high'&&!t.done).length;
-  document.getElementById('stat-total').textContent = total;
-  document.getElementById('stat-done').textContent = done;
-  document.getElementById('stat-pct').textContent = total ? Math.round(done/total*100)+'%' : '0%';
-  document.getElementById('stat-high').textContent = high;
-  document.getElementById('stat-pending').textContent = total - done;
-  ['الأرض','عوالم','بنك المعلومات','Konkan','ULTRAS HUB','مساعدي','شخصي'].forEach(p => {
-    const el = document.getElementById('count-'+p); if (el) el.textContent = tasks.filter(t=>t.project===p&&!t.done).length;
-  });
-  const allEl = document.getElementById('count-all'); if (allEl) allEl.textContent = tasks.filter(t=>!t.done).length;
+  const total=tasks.length, done=tasks.filter(t=>t.done).length, high=tasks.filter(t=>t.priority==='high'&&!t.done).length;
+  document.getElementById('stat-total').textContent=total;
+  document.getElementById('stat-done').textContent=done;
+  document.getElementById('stat-pct').textContent=total?Math.round(done/total*100)+'%':'0%';
+  document.getElementById('stat-high').textContent=high;
+  document.getElementById('stat-pending').textContent=total-done;
 }
 
-function toggleTask(id) { tasks = tasks.map(t => t.id===id?{...t,done:!t.done}:t); saveTasks(); renderTasks(); updateStats(); }
-function deleteTask(id) { tasks = tasks.filter(t=>t.id!==id); saveTasks(); renderTasks(); updateStats(); }
-function filterProject(p, btn) {
-  currentFilter = p;
-  document.querySelectorAll('.proj-btn').forEach(el=>el.classList.remove('active')); btn.classList.add('active');
-  document.getElementById('tasks-title').textContent = p==='all'?'كل المهام':p;
-  renderTasks();
-}
+function toggleTask(id) { tasks=tasks.map(t=>t.id===id?{...t,done:!t.done}:t); saveTasks(); renderTasks(); updateStats(); }
+function deleteTask(id) { tasks=tasks.filter(t=>t.id!==id); saveTasks(); renderTasks(); updateStats(); }
 function toggleForm() { const f=document.getElementById('add-form'); f.classList.toggle('visible'); if(f.classList.contains('visible')) document.getElementById('task-input').focus(); }
 function addTask() {
-  const title = document.getElementById('task-input').value.trim(); if (!title) return;
-  tasks.unshift({ id: Date.now(), title, project: document.getElementById('task-project').value, priority: document.getElementById('task-priority').value, done: false });
-  document.getElementById('task-input').value = ''; document.getElementById('add-form').classList.remove('visible');
+  const title=document.getElementById('task-input').value.trim(); if(!title) return;
+  tasks.unshift({id:Date.now(),title,project:document.getElementById('task-project').value,priority:document.getElementById('task-priority').value,done:false});
+  document.getElementById('task-input').value=''; document.getElementById('add-form').classList.remove('visible');
   saveTasks(); renderTasks(); updateStats();
 }
-function toggleSidebar() { sidebarOpen=!sidebarOpen; document.getElementById('sidebar').classList.toggle('collapsed',!sidebarOpen); }
+
 function switchView(v, btn) {
   document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
   document.getElementById('view-'+v).classList.add('active');
-  document.querySelectorAll('.view-tab').forEach(el=>el.classList.remove('active')); btn.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(el=>el.classList.remove('active'));
+  btn.classList.add('active');
 }
 
-/* ── Gmail ── */
-function gmailSignIn() {
-  const client = google.accounts.oauth2.initTokenClient({
-    client_id: GOOGLE_CLIENT_ID,
-    scope: GMAIL_SCOPES,
-    callback: (resp) => {
-      if (resp.access_token) {
-        gmailToken = resp.access_token;
-        document.getElementById('gmail-auth-btn').style.display = 'none';
-        document.getElementById('gmail-refresh-btn').style.display = '';
-        document.getElementById('gmail-compose-btn').style.display = '';
-        document.getElementById('gmail-status').innerHTML = '<span class="gmail-connected">● متصل</span>';
-        loadEmails();
-      }
-    }
-  });
-  client.requestAccessToken();
-}
-
-async function gmailFetch(url) {
-  const res = await fetch(url, { headers: { Authorization: 'Bearer ' + gmailToken } });
-  return res.json();
-}
-
-async function loadEmails() {
-  if (!gmailToken) return;
-  document.getElementById('emails-container').innerHTML = '<div class="empty-state"><div class="empty-state-icon">⏳</div><p>جاري التحميل...</p></div>';
-  try {
-    const data = await gmailFetch('https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=30&labelIds=INBOX');
-    if (!data.messages) { document.getElementById('emails-container').innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>البريد الوارد فارغ</p></div>'; return; }
-    emails = await Promise.all(data.messages.map(m => gmailFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`)));
-    renderEmails();
-  } catch(e) { document.getElementById('emails-container').innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>خطأ في تحميل الرسائل</p></div>'; }
-}
-
-const AVATAR_COLORS = ['#7c6ef5','#34d399','#f87171','#fbbf24','#60a5fa','#f472b6','#fb923c'];
-function getAvatarColor(str) { let h=0; for(let c of str) h=(h*31+c.charCodeAt(0))&0xffffffff; return AVATAR_COLORS[Math.abs(h)%AVATAR_COLORS.length]; }
-function getHeader(msg, name) { return msg.payload?.headers?.find(h=>h.name===name)?.value || ''; }
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  const d = new Date(dateStr);
-  const now = new Date();
-  if (d.toDateString() === now.toDateString()) return d.toLocaleTimeString('ar', {hour:'2-digit',minute:'2-digit'});
-  return d.toLocaleDateString('ar', {day:'numeric',month:'short'});
-}
-function senderName(from) { return from.replace(/<.*>/, '').replace(/"/g,'').trim() || from.split('@')[0]; }
-
-function renderEmails() {
-  selectedEmails.clear();
-  document.getElementById('gmail-delete-btn').style.display = 'none';
-  const html = emails.map(msg => {
-    const from = getHeader(msg, 'From');
-    const subject = getHeader(msg, 'Subject') || '(بلا موضوع)';
-    const date = formatDate(getHeader(msg, 'Date'));
-    const name = senderName(from);
-    const initial = name[0]?.toUpperCase() || '?';
-    const color = getAvatarColor(from);
-    const isUnread = msg.labelIds?.includes('UNREAD');
-    const snippet = msg.snippet || '';
-    return `<div class="email-item ${isUnread?'unread':''}" onclick="openEmail('${msg.id}')">
-      <div class="email-check" onclick="toggleSelect(event,'${msg.id}',this)"></div>
-      <div class="email-avatar" style="background:${color}">${initial}</div>
-      <div class="email-content">
-        <div class="email-header">
-          <div class="email-from">${name}</div>
-          <div class="email-date">${date}</div>
-        </div>
-        <div class="email-subject">${subject}</div>
-        <div class="email-snippet">${snippet}</div>
-      </div>
-      ${isUnread?'<div class="email-unread-dot"></div>':''}
-    </div>`;
-  }).join('');
-  document.getElementById('emails-container').innerHTML = html || '<div class="empty-state"><div class="empty-state-icon">📭</div><p>لا توجد رسائل</p></div>';
-}
-
-function toggleSelect(e, id, el) {
-  e.stopPropagation();
-  if (selectedEmails.has(id)) { selectedEmails.delete(id); el.classList.remove('checked'); el.textContent=''; }
-  else { selectedEmails.add(id); el.classList.add('checked'); el.textContent='✓'; }
-  document.getElementById('gmail-delete-btn').style.display = selectedEmails.size?'':'none';
-}
-
-async function openEmail(id) {
-  currentEmailId = id;
-  const full = await gmailFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}?format=full`);
-  const subject = full.payload?.headers?.find(h=>h.name==='Subject')?.value || '(بلا موضوع)';
-  const from = full.payload?.headers?.find(h=>h.name==='From')?.value || '';
-  const date = formatDate(full.payload?.headers?.find(h=>h.name==='Date')?.value);
-  let body = '';
-  const extractBody = (part) => {
-    if (!part) return;
-    if (part.mimeType === 'text/plain' && part.body?.data) body = atob(part.body.data.replace(/-/g,'+').replace(/_/g,'/'));
-    else if (part.mimeType === 'text/html' && part.body?.data && !body) body = atob(part.body.data.replace(/-/g,'+').replace(/_/g,'/'));
-    if (part.parts) part.parts.forEach(extractBody);
-  };
-  extractBody(full.payload);
-  document.getElementById('detail-subject').textContent = subject;
-  document.getElementById('detail-from').textContent = from;
-  document.getElementById('detail-date').textContent = date;
-  const bodyEl = document.getElementById('detail-body');
-  if (body.includes('<')) { const iframe = document.createElement('iframe'); iframe.srcdoc = body; iframe.style.cssText='width:100%;height:100%;border:none;background:white;border-radius:8px'; bodyEl.innerHTML=''; bodyEl.appendChild(iframe); }
-  else bodyEl.textContent = body || full.snippet;
-  document.getElementById('email-detail').classList.add('visible');
-  if (full.labelIds?.includes('UNREAD')) await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}/modify`,{method:'POST',headers:{'Authorization':'Bearer '+gmailToken,'Content-Type':'application/json'},body:JSON.stringify({removeLabelIds:['UNREAD']})});
-}
-
-function closeEmailDetail() { document.getElementById('email-detail').classList.remove('visible'); currentEmailId=null; }
-
-async function deleteCurrentEmail() {
-  if (!currentEmailId) return;
-  await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${currentEmailId}/trash`,{method:'POST',headers:{Authorization:'Bearer '+gmailToken}});
-  closeEmailDetail(); emails=emails.filter(e=>e.id!==currentEmailId); renderEmails();
-}
-
-async function deleteSelected() {
-  if (!selectedEmails.size) return;
-  await Promise.all([...selectedEmails].map(id=>fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}/trash`,{method:'POST',headers:{Authorization:'Bearer '+gmailToken}})));
-  emails=emails.filter(e=>!selectedEmails.has(e.id)); selectedEmails.clear(); renderEmails();
-  document.getElementById('gmail-delete-btn').style.display='none';
-}
-
-function replyEmail() {
-  const subj = document.getElementById('detail-subject').textContent;
-  const from = document.getElementById('detail-from').textContent;
-  const toEmail = from.match(/<(.+)>/)?.[1] || from;
-  document.getElementById('compose-to').value = toEmail;
-  document.getElementById('compose-subject').value = 'Re: ' + subj;
-  document.getElementById('compose-body').textContent = '';
-  document.getElementById('compose-modal').classList.add('visible');
-}
-
-function openCompose() { document.getElementById('compose-to').value=''; document.getElementById('compose-subject').value=''; document.getElementById('compose-body').textContent=''; document.getElementById('compose-modal').classList.add('visible'); }
-function closeCompose() { document.getElementById('compose-modal').classList.remove('visible'); }
-
-async function sendEmail() {
-  const to = document.getElementById('compose-to').value.trim();
-  const subject = document.getElementById('compose-subject').value.trim();
-  const body = document.getElementById('compose-body').textContent.trim();
-  if (!to||!subject||!body) { alert('يرجى تعبئة جميع الحقول'); return; }
-  const msg = `To: ${to}\r\nSubject: =?UTF-8?B?${btoa(unescape(encodeURIComponent(subject)))}?=\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n${body}`;
-  const encoded = btoa(unescape(encodeURIComponent(msg))).replace(/\+/g,'-').replace(/\//g,'_');
-  const res = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send',{method:'POST',headers:{'Authorization':'Bearer '+gmailToken,'Content-Type':'application/json'},body:JSON.stringify({raw:encoded})});
-  if (res.ok) { closeCompose(); alert('✅ تم الإرسال!'); } else { alert('❌ فشل الإرسال'); }
-}
-
-/* ── Chat ── */
+/* Chat */
 function appendMsg(text, type) {
-  const welcome = document.querySelector('.chat-welcome'); if (welcome) welcome.remove();
-  const msgs = document.getElementById('chat-messages');
-  const wrap = document.createElement('div');
-  wrap.className = 'msg msg-'+(type==='user'?'user':'ai')+(type==='thinking'?' msg-thinking':'');
-  const now = new Date().toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});
-  wrap.innerHTML = `<div class="msg-bubble">${text}</div><div class="msg-time">${now}</div>`;
+  const welcome=document.querySelector('.chat-welcome'); if(welcome) welcome.remove();
+  const msgs=document.getElementById('chat-messages');
+  const wrap=document.createElement('div');
+  wrap.className='msg msg-'+(type==='user'?'user':'ai')+(type==='thinking'?' msg-thinking':'');
+  const now=new Date().toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});
+  wrap.innerHTML=`<div class="msg-bubble">${text}</div><div class="msg-time">${now}</div>`;
   msgs.appendChild(wrap); msgs.scrollTop=msgs.scrollHeight; return wrap;
 }
-function sendSuggestion(text) { switchView('chat',document.querySelectorAll('.view-tab')[2]); document.getElementById('chat-input').value=text; sendChat(); }
+function sendSug(text) { document.getElementById('chat-input').value=text; sendChat(); }
 async function sendChat() {
-  if (!API_KEY) { const k=prompt('أدخل مفتاح Claude API:'); if(k){localStorage.setItem('claude_key',k);API_KEY=k;}else return; }
+  if(!API_KEY){const k=prompt('أدخل مفتاح Claude API:');if(k){localStorage.setItem('claude_key',k);API_KEY=k;}else return;}
   const input=document.getElementById('chat-input'); const text=input.value.trim(); if(!text) return;
   input.value=''; input.style.height='auto'; appendMsg(text,'user'); chatHistory.push({role:'user',content:text});
   const btn=document.getElementById('chat-send-btn'); btn.disabled=true;
@@ -618,14 +526,97 @@ async function sendChat() {
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':API_KEY,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:1024,system:PROJECTS_INFO+'\n'+tasksSummary,messages:chatHistory})});
     const data=await res.json(); const reply=data.content?.[0]?.text||'حاول مرة أخرى.';
     thinking.remove(); appendMsg(reply,'ai'); chatHistory.push({role:'assistant',content:reply});
-  } catch(e) { thinking.querySelector('.msg-bubble').textContent='خطأ في الاتصال.'; }
+  } catch(e){thinking.querySelector('.msg-bubble').textContent='خطأ في الاتصال.';}
   btn.disabled=false;
 }
 
-document.getElementById('date-badge').textContent = new Date().toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long'});
-if (!API_KEY) { const k=prompt('أدخل مفتاح Claude API:'); if(k){localStorage.setItem('claude_key',k);API_KEY=k;} }
+/* Gmail */
+function gmailSignIn() {
+  const client=google.accounts.oauth2.initTokenClient({client_id:GOOGLE_CLIENT_ID,scope:GMAIL_SCOPES,callback:(resp)=>{
+    if(resp.access_token){
+      gmailToken=resp.access_token;
+      document.getElementById('gmail-auth-btn').style.display='none';
+      document.getElementById('gmail-refresh-btn').style.display='';
+      document.getElementById('gmail-compose-btn').style.display='';
+      document.getElementById('gmail-status').innerHTML='<span class="gmail-connected">● متصل</span>';
+      loadEmails();
+    }
+  }});
+  client.requestAccessToken();
+}
+async function gmailFetch(url){const res=await fetch(url,{headers:{Authorization:'Bearer '+gmailToken}});return res.json();}
+async function loadEmails(){
+  if(!gmailToken) return;
+  document.getElementById('emails-container').innerHTML='<div class="empty-state"><div class="empty-state-icon">⏳</div><p>جاري التحميل...</p></div>';
+  try{
+    const data=await gmailFetch('https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=30&labelIds=INBOX');
+    if(!data.messages){document.getElementById('emails-container').innerHTML='<div class="empty-state"><div class="empty-state-icon">📭</div><p>البريد فارغ</p></div>';return;}
+    emails=await Promise.all(data.messages.map(m=>gmailFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`)));
+    renderEmails();
+  }catch(e){document.getElementById('emails-container').innerHTML='<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>خطأ في التحميل</p></div>';}
+}
+const ACOLORS=['#f5c842','#34d399','#f87171','#60a5fa','#f472b6','#fb923c','#a78bfa'];
+function aColor(s){let h=0;for(let c of s)h=(h*31+c.charCodeAt(0))&0xffffffff;return ACOLORS[Math.abs(h)%ACOLORS.length];}
+function getH(msg,n){return msg.payload?.headers?.find(h=>h.name===n)?.value||'';}
+function fDate(d){if(!d)return '';const dt=new Date(d),now=new Date();if(dt.toDateString()===now.toDateString())return dt.toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});return dt.toLocaleDateString('ar',{day:'numeric',month:'short'});}
+function sName(from){return from.replace(/<.*>/,'').replace(/"/g,'').trim()||from.split('@')[0];}
+function renderEmails(){
+  selectedEmails.clear(); document.getElementById('gmail-delete-btn').style.display='none';
+  const html=emails.map(msg=>{
+    const from=getH(msg,'From'),subject=getH(msg,'Subject')||'(بلا موضوع)',date=fDate(getH(msg,'Date'));
+    const name=sName(from),initial=name[0]?.toUpperCase()||'?',color=aColor(from);
+    const isUnread=msg.labelIds?.includes('UNREAD');
+    return `<div class="email-item ${isUnread?'unread':''}" onclick="openEmail('${msg.id}')">
+      <div class="email-check" onclick="toggleSel(event,'${msg.id}',this)"></div>
+      <div class="email-avatar" style="background:${color}">${initial}</div>
+      <div class="email-content">
+        <div class="email-header"><div class="email-from">${name}</div><div class="email-date">${date}</div></div>
+        <div class="email-subject">${subject}</div>
+        <div class="email-snippet">${msg.snippet||''}</div>
+      </div>
+      ${isUnread?'<div class="email-unread-dot"></div>':''}
+    </div>`;
+  }).join('');
+  document.getElementById('emails-container').innerHTML=html||'<div class="empty-state"><div class="empty-state-icon">📭</div><p>لا توجد رسائل</p></div>';
+}
+function toggleSel(e,id,el){e.stopPropagation();if(selectedEmails.has(id)){selectedEmails.delete(id);el.classList.remove('checked');el.textContent='';}else{selectedEmails.add(id);el.classList.add('checked');el.textContent='✓';}document.getElementById('gmail-delete-btn').style.display=selectedEmails.size?'':'none';}
+async function openEmail(id){
+  currentEmailId=id;
+  const full=await gmailFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}?format=full`);
+  const subject=full.payload?.headers?.find(h=>h.name==='Subject')?.value||'(بلا موضوع)';
+  const from=full.payload?.headers?.find(h=>h.name==='From')?.value||'';
+  const date=fDate(full.payload?.headers?.find(h=>h.name==='Date')?.value);
+  let body='';
+  const exBody=(part)=>{if(!part)return;if(part.mimeType==='text/plain'&&part.body?.data)body=atob(part.body.data.replace(/-/g,'+').replace(/_/g,'/'));else if(part.mimeType==='text/html'&&part.body?.data&&!body)body=atob(part.body.data.replace(/-/g,'+').replace(/_/g,'/'));if(part.parts)part.parts.forEach(exBody);};
+  exBody(full.payload);
+  document.getElementById('detail-subject').textContent=subject;
+  document.getElementById('detail-from').textContent=from;
+  document.getElementById('detail-date').textContent=date;
+  const bodyEl=document.getElementById('detail-body');
+  if(body.includes('<')){const iframe=document.createElement('iframe');iframe.srcdoc=body;iframe.style.cssText='width:100%;height:100%;border:none;background:white;border-radius:8px';bodyEl.innerHTML='';bodyEl.appendChild(iframe);}
+  else bodyEl.textContent=body||full.snippet;
+  document.getElementById('email-detail').classList.add('visible');
+  if(full.labelIds?.includes('UNREAD'))await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}/modify`,{method:'POST',headers:{'Authorization':'Bearer '+gmailToken,'Content-Type':'application/json'},body:JSON.stringify({removeLabelIds:['UNREAD']})});
+}
+function closeEmailDetail(){document.getElementById('email-detail').classList.remove('visible');currentEmailId=null;}
+async function deleteCurrentEmail(){if(!currentEmailId)return;await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${currentEmailId}/trash`,{method:'POST',headers:{Authorization:'Bearer '+gmailToken}});closeEmailDetail();emails=emails.filter(e=>e.id!==currentEmailId);renderEmails();}
+async function deleteSelected(){if(!selectedEmails.size)return;await Promise.all([...selectedEmails].map(id=>fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}/trash`,{method:'POST',headers:{Authorization:'Bearer '+gmailToken}})));emails=emails.filter(e=>!selectedEmails.has(e.id));selectedEmails.clear();renderEmails();document.getElementById('gmail-delete-btn').style.display='none';}
+function replyEmail(){const subj=document.getElementById('detail-subject').textContent,from=document.getElementById('detail-from').textContent,toEmail=from.match(/<(.+)>/)?.[1]||from;document.getElementById('compose-to').value=toEmail;document.getElementById('compose-subject').value='Re: '+subj;document.getElementById('compose-body').textContent='';document.getElementById('compose-modal').classList.add('visible');}
+function openCompose(){document.getElementById('compose-to').value='';document.getElementById('compose-subject').value='';document.getElementById('compose-body').textContent='';document.getElementById('compose-modal').classList.add('visible');}
+function closeCompose(){document.getElementById('compose-modal').classList.remove('visible');}
+async function sendEmail(){
+  const to=document.getElementById('compose-to').value.trim(),subject=document.getElementById('compose-subject').value.trim(),body=document.getElementById('compose-body').textContent.trim();
+  if(!to||!subject||!body){alert('يرجى تعبئة جميع الحقول');return;}
+  const msg=`To: ${to}\r\nSubject: =?UTF-8?B?${btoa(unescape(encodeURIComponent(subject)))}?=\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n${body}`;
+  const encoded=btoa(unescape(encodeURIComponent(msg))).replace(/\+/g,'-').replace(/\//g,'_');
+  const res=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send',{method:'POST',headers:{'Authorization':'Bearer '+gmailToken,'Content-Type':'application/json'},body:JSON.stringify({raw:encoded})});
+  if(res.ok){closeCompose();alert('✅ تم الإرسال!');}else{alert('❌ فشل الإرسال');}
+}
+
+document.getElementById('date-badge').textContent=new Date().toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long'});
+if(!API_KEY){const k=prompt('أدخل مفتاح Claude API:');if(k){localStorage.setItem('claude_key',k);API_KEY=k;}}
 renderTasks(); updateStats();
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
 </script>
 </body>
 </html>
