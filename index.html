@@ -57,7 +57,7 @@
   /* Layout */
   .layout {
     display: grid;
-    grid-template-columns: 260px 1fr 300px;
+    grid-template-columns: 260px 1fr;
     gap: 0;
     flex: 1;
     height: calc(100vh - 57px);
@@ -251,35 +251,10 @@
     color: var(--text2);
   }
 
-  /* Chat Panel */
-  .chat-panel {
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-  .chat-header {
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
   .ai-dot {
     width: 8px; height: 8px;
     background: var(--success);
     border-radius: 50%;
-  }
-  .chat-messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
   }
   .msg {
     max-width: 85%;
@@ -307,65 +282,6 @@
     align-self: flex-start;
     font-style: italic;
   }
-  .chat-input-area {
-    padding: 12px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    gap: 8px;
-    align-items: flex-end;
-  }
-  .chat-input {
-    flex: 1;
-    padding: 9px 12px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 13px;
-    font-family: inherit;
-    resize: none;
-    outline: none;
-    min-height: 38px;
-    max-height: 120px;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.4;
-  }
-  .chat-input:focus { border-color: var(--accent); background: var(--surface); }
-  .send-btn {
-    width: 36px; height: 36px;
-    background: var(--accent);
-    border: none;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .send-btn:hover { opacity: 0.88; }
-  .send-btn:disabled { opacity: 0.4; cursor: default; }
-
-  /* Quick prompts */
-  .quick-prompts {
-    padding: 0 12px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  .quick-btn {
-    font-size: 11.5px;
-    padding: 6px 10px;
-    border: 1px solid var(--border);
-    border-radius: 7px;
-    background: none;
-    cursor: pointer;
-    color: var(--text2);
-    text-align: right;
-    font-family: inherit;
-    transition: all 0.15s;
-  }
-  .quick-btn:hover { background: var(--accent-bg); color: var(--accent-text); border-color: var(--accent); }
 
   @media (max-width: 768px) {
     .layout {
@@ -373,15 +289,6 @@
       height: auto;
     }
     .sidebar { display: none; }
-    .chat-panel {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 60vh;
-      border-radius: 16px 16px 0 0;
-      z-index: 50;
-    }
     .stats-bar { grid-template-columns: repeat(2, 1fr); }
     .fab { bottom: 70vh; }
   }
@@ -501,28 +408,6 @@
     </div>
   </div>
 
-  <!-- Chat Panel -->
-  <div class="chat-panel">
-    <div class="chat-header">
-      <div class="ai-dot"></div>
-      المساعد الذكي
-    </div>
-    <div class="chat-messages" id="chat-messages">
-      <div class="msg msg-ai">أهلاً أبو أمجد! أنا على دراية بمشاريعك كلها. كيف أقدر أساعدك اليوم؟</div>
-    </div>
-    <div class="quick-prompts">
-      <button class="quick-btn" onclick="quickAsk('ما هي أهم مهام اليوم؟')">ما أهم مهام اليوم؟</button>
-      <button class="quick-btn" onclick="quickAsk('ما آخر تحديثات مشروع الأرض؟')">آخر تحديثات الأرض</button>
-      <button class="quick-btn" onclick="quickAsk('رتب مهامي حسب الأولوية')">رتب مهامي</button>
-    </div>
-    <div class="chat-input-area">
-      <textarea class="chat-input" id="chat-input" placeholder="اسأل عن مشاريعك..." rows="1"
-        onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();sendMsg()}"
-        oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
-      <button class="send-btn" id="send-btn" onclick="sendMsg()">↑</button>
-    </div>
-  </div>
-
 </div>
 
 <script>
@@ -553,7 +438,6 @@ if (tasks.length === 0) {
 }
 
 let currentFilter = 'all';
-let chatHistory = [];
 
 function saveTasks() {
   localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -643,65 +527,6 @@ function addTask() {
   document.getElementById('task-input').value = '';
   document.getElementById('add-form').classList.remove('visible');
   saveTasks(); renderTasks(); updateStats();
-}
-
-function appendMsg(text, type) {
-  const el = document.createElement('div');
-  el.className = 'msg msg-' + type;
-  el.textContent = text;
-  const msgs = document.getElementById('chat-messages');
-  msgs.appendChild(el);
-  msgs.scrollTop = msgs.scrollHeight;
-  return el;
-}
-
-async function sendMsg() {
-  const input = document.getElementById('chat-input');
-  const text = input.value.trim();
-  if (!text) return;
-
-  input.value = '';
-  input.style.height = 'auto';
-  appendMsg(text, 'user');
-
-  chatHistory.push({ role: 'user', content: text });
-
-  const thinking = appendMsg('...', 'thinking');
-  document.getElementById('send-btn').disabled = true;
-
-  const tasksSummary = `المهام الحالية: ${tasks.map(t => `${t.title} (${t.project}, ${t.done ? 'مكتملة' : 'معلقة'})`).join(' | ')}`;
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'x-api-key': API_KEY,
-          'anthropic-version': '2023-06-01',
-          'content-type': 'application/json',
-          'anthropic-dangerous-direct-browser-access': 'true'
-        },
-        body: JSON.stringify({
-          model: 'claude-haiku-4-5',
-          max_tokens: 1024,
-          system: PROJECTS_INFO + '\n' + tasksSummary,
-          messages: chatHistory
-        })
-      });
-    const data = await res.json();
-    const reply = data.content?.[0]?.text || 'لم أتمكن من الرد، حاول مرة أخرى.';
-    thinking.remove();
-    appendMsg(reply, 'ai');
-    chatHistory.push({ role: 'assistant', content: reply });
-  } catch (e) {
-    thinking.textContent = 'خطأ: ' + e.message;
-  }
-
-  document.getElementById('send-btn').disabled = false;
-}
-
-function quickAsk(q) {
-  document.getElementById('chat-input').value = q;
-  sendMsg();
 }
 
 document.getElementById('date-badge').textContent = new Date().toLocaleDateString('ar-SA', { weekday: 'long', day: 'numeric', month: 'long' });
