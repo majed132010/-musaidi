@@ -503,7 +503,7 @@
 </div>
 
 <script>
-const API_KEY = localStorage.getItem('or_key') || '';
+const API_KEY = localStorage.getItem('claude_key') || '';
 
 const PROJECTS_INFO = `
 أنت مساعد شخصي لأبو أمجد، مطور عربي مستقل يعمل على المشاريع التالية:
@@ -649,24 +649,23 @@ async function sendMsg() {
   const tasksSummary = `المهام الحالية: ${tasks.map(t => `${t.title} (${t.project}, ${t.done ? 'مكتملة' : 'معلقة'})`).join(' | ')}`;
 
   try {
-    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${API_KEY}`,
-          'HTTP-Referer': 'https://localhost',
-          'X-Title': 'Musaidi'
+          'x-api-key': API_KEY,
+          'anthropic-version': '2023-06-01',
+          'content-type': 'application/json',
+          'anthropic-dangerous-direct-browser-access': 'true'
         },
         body: JSON.stringify({
-          model: 'openrouter/auto',
-          messages: [
-            { role: 'system', content: PROJECTS_INFO + '\n' + tasksSummary },
-            ...chatHistory
-          ]
+          model: 'claude-haiku-4-5',
+          max_tokens: 1024,
+          system: PROJECTS_INFO + '\n' + tasksSummary,
+          messages: chatHistory
         })
       });
     const data = await res.json();
-    const reply = data.choices?.[0]?.message?.content || 'لم أتمكن من الرد، حاول مرة أخرى.';
+    const reply = data.content?.[0]?.text || 'لم أتمكن من الرد، حاول مرة أخرى.';
     thinking.remove();
     appendMsg(reply, 'ai');
     chatHistory.push({ role: 'assistant', content: reply });
@@ -685,8 +684,8 @@ function quickAsk(q) {
 document.getElementById('date-badge').textContent = new Date().toLocaleDateString('ar-SA', { weekday: 'long', day: 'numeric', month: 'long' });
 
 if (!API_KEY) {
-  const key = prompt('أدخل مفتاح OpenRouter (sk-or-...)');
-  if (key) { localStorage.setItem('or_key', key); location.reload(); }
+  const key = prompt('أدخل مفتاح Claude API');
+  if (key) { localStorage.setItem('claude_key', key); location.reload(); }
 }
 
 renderTasks();
@@ -844,24 +843,23 @@ async function sendFab() {
   const thinking = appendFabMsg('...', 'thinking');
   const tasksSummary = `المهام: ${tasks.map(t=>`${t.title}(${t.project},${t.done?'✓':'○'})`).join(' | ')}`;
   try {
-    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${API_KEY}`,
-        'HTTP-Referer': 'https://musaidi.vercel.app',
-        'X-Title': 'Musaidi'
+        'x-api-key': API_KEY,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+        'anthropic-dangerous-direct-browser-access': 'true'
       },
       body: JSON.stringify({
-        model: 'openrouter/auto',
-        messages: [
-          { role: 'system', content: PROJECTS_INFO + '\n' + tasksSummary },
-          ...fabHistory
-        ]
+        model: 'claude-haiku-4-5',
+        max_tokens: 1024,
+        system: PROJECTS_INFO + '\n' + tasksSummary,
+        messages: fabHistory
       })
     });
     const data = await res.json();
-    const reply = data.choices?.[0]?.message?.content || 'حاول مرة أخرى.';
+    const reply = data.content?.[0]?.text || 'حاول مرة أخرى.';
     thinking.remove();
     appendFabMsg(reply, 'ai');
     fabHistory.push({ role: 'assistant', content: reply });
