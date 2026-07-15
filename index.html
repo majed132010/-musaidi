@@ -506,6 +506,46 @@ async function getMailCtx(){
   }else ctx+='\n[Hotmail: غير مرتبط — اطلب من المستخدم تسجيل الدخول]\n';
   return ctx;
 }
+/* ── AI Mail Actions ── */
+async function aiSendGmail(to,subject,body){
+  if(!gTok)return'❌ Gmail غير مرتبط';
+  const msg=`To: ${to}\r\nSubject: =?UTF-8?B?${btoa(unescape(encodeURIComponent(subject)))}?=\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n${body}`;
+  const enc=btoa(unescape(encodeURIComponent(msg))).replace(/\+/g,'-').replace(/\//g,'_');
+  const r=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send',{method:'POST',headers:{'Authorization':'Bearer '+gTok,'Content-Type':'application/json'},body:JSON.stringify({raw:enc})});
+  return r.ok?`✅ تم إرسال الرسالة إلى ${to}`:'❌ فشل الإرسال';
+}
+async function aiDeleteGmail(msgId){
+  if(!gTok)return'❌ Gmail غير مرتبط';
+  const r=await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${msgId}/trash`,{method:'POST',headers:{Authorization:'Bearer '+gTok}});
+  return r.ok?'✅ تم حذف الرسالة':'❌ فشل الحذف';
+}
+async function aiSearchGmail(query){
+  if(!gTok)return'[Gmail غير مرتبط]';
+  try{
+    const d=await gf(`https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=5&q=${encodeURIComponent(query)}`);
+    if(!d.messages)return'لا توجد نتائج للبحث';
+    const msgs=await Promise.all(d.messages.map(m=>gf(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`)));
+    return msgs.map(m=>`📧 ID:${m.id} | من: ${sN(gH(m,'From'))} | ${gH(m,'Subject')} | ${fD(gH(m,'Date'))}`).join('\n');
+  }catch(e){return'[خطأ في البحث]';}
+}
+
+async function processAIActions(reply){
+  // Parse AI actions like [ACTION:type:params]
+  const actionRe=/\[ACTION:(SEND|DELETE|SEARCH):([^\]]*)\]/g;
+  let match,result=reply,hasAction=false;
+  while((match=actionRe.exec(reply))!==null){
+    hasAction=true;
+    const [full,type,params]=match;
+    const parts=params.split('|||');
+    let res='';
+    if(type==='SEND')res=await aiSendGmail(parts[0],parts[1],parts[2]||'');
+    else if(type==='DELETE')res=await aiDeleteGmail(parts[0]);
+    else if(type==='SEARCH')res=await aiSearchGmail(parts[0]);
+    result=result.replace(full,'\n'+res+'\n');
+  }
+  return{text:result,hadActions:hasAction};
+}
+
 async function sendChat(){
   if(!AK){const k=prompt('أدخل مفتاح Claude API:');if(k){localStorage.setItem('claude_key',k);AK=k;}else return;}
   const inp=document.getElementById('ci');const txt=inp.value.trim();if(!txt)return;
@@ -513,13 +553,27 @@ async function sendChat(){
   const btn=document.getElementById('csbtn');btn.disabled=true;
   const tk=am('<div class="dots"><span></span><span></span><span></span></div>','tk');
   const ts=`المهام: ${tasks.map(t=>`${t.title}(${t.project},${t.done?'✓':'○'})`).join(' | ')}`;
-  const isMailQ=/رسال|بريد|ايميل|gmail|hotmail|وصل|جديد|inbox|mail/i.test(txt);
+  const isMailQ=/رسال|بريد|ايميل|gmail|hotmail|وصل|جديد|inbox|mail|احذف|ارسل|ابحث/i.test(txt);
   let mailCtx='';
-  if(isMailQ||hist.length<=2)mailCtx=await getMailCtx();
+  if(isMailQ)mailCtx=await getMailCtx();
+
+  const fullSys=SYS+'\n'+ts+(mailCtx?'\n\nبيانات البريد الحالية:\n'+mailCtx:'')+`
+
+## صلاحيات البريد:
+لديك صلاحية كاملة للتحكم في Gmail. يمكنك:
+1. إرسال رسالة: استخدم [ACTION:SEND:البريد|||الموضوع|||النص]
+2. حذف رسالة: استخدم [ACTION:DELETE:messageId]
+3. البحث: استخدم [ACTION:SEARCH:كلمة البحث]
+
+عند طلب إرسال أو حذف، نفّذ الأمر مباشرة باستخدام الكود أعلاه في ردك.
+مثال: إذا طلب المستخدم إرسال رسالة، أجب وأضف [ACTION:SEND:to@email.com|||الموضوع|||النص]`;
+
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':AK,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:1024,system:SYS+'\n'+ts+(mailCtx?'\n\nبيانات البريد الحالية:\n'+mailCtx:''),messages:hist})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':AK,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:1024,system:fullSys,messages:hist})});
     const d=await r.json();const rep=d.content?.[0]?.text||'حاول مرة أخرى.';
-    tk.remove();am(rep,'ai');hist.push({role:'assistant',content:rep});
+    tk.remove();
+    const{text}=await processAIActions(rep);
+    am(text,'ai');hist.push({role:'assistant',content:rep});
   }catch(e){tk.querySelector('.mb').textContent='خطأ في الاتصال.';}
   btn.disabled=false;
 }
