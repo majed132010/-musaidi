@@ -328,25 +328,14 @@ async function fetchGitHub(){
 }
 
 function getGhSummary(){
-  if(!Object.keys(ghData).length)return'
-[GitHub: لم تتم المزامنة بعد — اضغط تحديث GitHub]
-';
-  let s='
-=== آخر تحديثات GitHub ===
-';
+  if(!Object.keys(ghData).length)return`\n[GitHub: لم تتم المزامنة بعد — اضغط تحديث GitHub]\n`;
+  let s=`\n=== آخر تحديثات GitHub ===\n`;
   for(const[name,d]of Object.entries(ghData)){
-    if(d.error){s+='
-'+name+': '+d.error+'
-';continue;}
-    s+='
-📁 '+name+' ('+d.tech+')
-';
-    if(d.commits&&d.commits.length)d.commits.forEach(c=>s+='  ✦ '+c.msg+' ('+c.date+')
-');
+    if(d.error){s+=`\n${name}: ${d.error}\n`;continue;}
+    s+=`\n📁 ${name} (${d.tech})\n`;
+    if(d.commits&&d.commits.length)d.commits.forEach(c=>s+=`  ✦ ${c.msg} (${c.date})\n`);
   }
-  s+='
-آخر مزامنة: '+new Date(ghLastSync).toLocaleString('ar-SA')+'
-';
+  s+=`\nآخر مزامنة: ${new Date(ghLastSync).toLocaleString('ar-SA')}\n`;
   return s;
 }
 
@@ -359,7 +348,7 @@ async function autoSyncGitHub(){
   if(Date.now()-ghLastSync>GH_INTERVAL)await fetchGitHub();
 }
 
-const SYS=;
+const SYS=`أنت مساعد شخصي لأبو أمجد (ماجد خزاعي)، مطور عربي مستقل من السعودية. لديك صلاحية قراءة بريده وآخر تحديثات GitHub لمشاريعه الستة. أجب بالعربية بشكل مختصر ومفيد ومباشر.`;
 
 let AK=localStorage.getItem('claude_key')||'';
 let tasks=JSON.parse(localStorage.getItem('musaidi_tasks')||'[]');
