@@ -159,7 +159,11 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <body>
 <div class="header">
   <div class="logo"><div class="logo-icon">🤖</div><span class="logo-text">مساعدي</span></div>
-  <div class="hdate" id="hdate"></div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <button onclick="fetchGitHub().then(()=>alert('✅ تم تحديث GitHub!'))" style="font-size:10px;padding:4px 8px;border-radius:12px;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:#fff;cursor:pointer" title="تحديث GitHub">🔄 GitHub</button>
+    <div id="gh-badge" style="font-size:10px;color:rgba(255,255,255,0.6)">GitHub: غير محدّث</div>
+    <div class="hdate" id="hdate"></div>
+  </div>
 </div>
 <div class="app-body">
 
@@ -290,10 +294,72 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <script>
 const GID='498546452069-rptoquk5iio9699psetipnidvaac8g5t.apps.googleusercontent.com';
 const GSCOPE='https://www.googleapis.com/auth/gmail.modify';
-const SYS=`أنت مساعد شخصي لأبو أمجد، مطور عربي مستقل.
-المشاريع: الأرض(React+FastAPI+MongoDB)، عوالم(Firebase+Agora)، بنك المعلومات، Konkan، ULTRAS HUB، مساعدي.
-لديك صلاحية قراءة بريد المستخدم. عندما يسأل ستجد ملخص رسائله في السياق.
-أجب بالعربية بشكل مختصر ومفيد.`;
+
+const REPOS=[
+  {name:'الأرض',repo:'jwanmajd770-create/ooo',url:'https://ooo-five-teal.vercel.app',tech:'React+FastAPI+MongoDB'},
+  {name:'عوالم',repo:'majed132010/majed132010.github.io',url:'https://majed132010.github.io',tech:'Firebase+Agora'},
+  {name:'بنك المعلومات',repo:'majed132010/bank-almaloomat',url:'https://bank-almaloomat-game.web.app',tech:'Firebase+WebRTC'},
+  {name:'Konkan',repo:'policetrafic13-rgb/konkan',url:'https://policetrafic13-rgb.github.io/konkan/',tech:'React Native+Expo'},
+  {name:'ULTRAS HUB',repo:'mask1313/spots',url:'https://majed132010.github.io',tech:'PWA+Cloudflare Worker'},
+  {name:'مساعدي',repo:'majed132010/-musaidi',url:'https://musaidi.vercel.app',tech:'PWA+Claude AI'},
+];
+
+let ghData=JSON.parse(localStorage.getItem('gh_data')||'{}');
+let ghLastSync=parseInt(localStorage.getItem('gh_last_sync')||'0');
+const GH_INTERVAL=6*60*60*1000;
+
+async function fetchGitHub(){
+  const results={};
+  for(const p of REPOS){
+    try{
+      const r=await fetch('https://api.github.com/repos/'+p.repo+'/commits?per_page=3');
+      const commits=await r.json();
+      results[p.name]={
+        repo:p.repo,url:p.url,tech:p.tech,
+        commits:Array.isArray(commits)?commits.map(c=>({msg:c.commit?.message?.split(String.fromCharCode(10))[0],date:c.commit?.author?.date?.slice(0,10)})):[],
+        synced:new Date().toLocaleString('ar-SA'),
+      };
+    }catch(e){results[p.name]={error:'خطأ في الجلب',repo:p.repo};}
+  }
+  ghData=results;ghLastSync=Date.now();
+  localStorage.setItem('gh_data',JSON.stringify(ghData));
+  localStorage.setItem('gh_last_sync',ghLastSync.toString());
+  updGhBadge();return ghData;
+}
+
+function getGhSummary(){
+  if(!Object.keys(ghData).length)return'
+[GitHub: لم تتم المزامنة بعد — اضغط تحديث GitHub]
+';
+  let s='
+=== آخر تحديثات GitHub ===
+';
+  for(const[name,d]of Object.entries(ghData)){
+    if(d.error){s+='
+'+name+': '+d.error+'
+';continue;}
+    s+='
+📁 '+name+' ('+d.tech+')
+';
+    if(d.commits&&d.commits.length)d.commits.forEach(c=>s+='  ✦ '+c.msg+' ('+c.date+')
+');
+  }
+  s+='
+آخر مزامنة: '+new Date(ghLastSync).toLocaleString('ar-SA')+'
+';
+  return s;
+}
+
+function updGhBadge(){
+  const b=document.getElementById('gh-badge');
+  if(b)b.textContent=ghLastSync?'🔄 GitHub: '+new Date(ghLastSync).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'}):'🔄 GitHub: غير محدّث';
+}
+
+async function autoSyncGitHub(){
+  if(Date.now()-ghLastSync>GH_INTERVAL)await fetchGitHub();
+}
+
+const SYS=;
 
 let AK=localStorage.getItem('claude_key')||'';
 let tasks=JSON.parse(localStorage.getItem('musaidi_tasks')||'[]');
@@ -553,11 +619,12 @@ async function sendChat(){
   const btn=document.getElementById('csbtn');btn.disabled=true;
   const tk=am('<div class="dots"><span></span><span></span><span></span></div>','tk');
   const ts=`المهام: ${tasks.map(t=>`${t.title}(${t.project},${t.done?'✓':'○'})`).join(' | ')}`;
+  const ghCtx=getGhSummary();
   const isMailQ=/رسال|بريد|ايميل|gmail|hotmail|وصل|جديد|inbox|mail|احذف|ارسل|ابحث/i.test(txt);
   let mailCtx='';
   if(isMailQ)mailCtx=await getMailCtx();
 
-  const fullSys=SYS+'\n'+ts+(mailCtx?'\n\nبيانات البريد الحالية:\n'+mailCtx:'')+`
+  const fullSys=SYS+"\n"+ts+`
 
 ## صلاحيات البريد:
 لديك صلاحية كاملة للتحكم في Gmail. يمكنك:
@@ -569,7 +636,10 @@ async function sendChat(){
 مثال: إذا طلب المستخدم إرسال رسالة، أجب وأضف [ACTION:SEND:to@email.com|||الموضوع|||النص]`;
 
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':AK,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:1024,system:fullSys,messages:hist})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':AK,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:1024,system:fullSys+ghCtx+(mailCtx?"
+
+بيانات البريد:
+"+mailCtx:""),messages:hist})});
     const d=await r.json();const rep=d.content?.[0]?.text||'حاول مرة أخرى.';
     tk.remove();
     const{text}=await processAIActions(rep);
@@ -578,6 +648,8 @@ async function sendChat(){
   btn.disabled=false;
 }
 document.getElementById('hdate').textContent=new Date().toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long'});
+autoSyncGitHub();updGhBadge();
+setInterval(autoSyncGitHub, 60*60*1000);
 if(!AK){const k=prompt('أدخل مفتاح Claude API:');if(k){localStorage.setItem('claude_key',k);AK=k;}}
 if(hmTok)updBadges();
 renderT();updS();
