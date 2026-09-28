@@ -59,6 +59,18 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .ci::placeholder{color:var(--t3)}
 .cs{width:44px;height:44px;background:var(--gm);border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .cs:disabled{opacity:.5}
+.mic-btn{width:44px;height:44px;background:var(--bg);border:2px solid var(--gm);border-radius:50%;color:var(--gm);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.mic-btn.listening{background:var(--gm);color:#fff;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.voice-wave{display:none;align-items:center;gap:3px;padding:0 8px}
+.voice-wave.active{display:flex}
+.voice-wave span{width:3px;border-radius:3px;background:var(--gm);animation:wave 1s ease-in-out infinite}
+.voice-wave span:nth-child(1){height:8px;animation-delay:0s}
+.voice-wave span:nth-child(2){height:16px;animation-delay:.1s}
+.voice-wave span:nth-child(3){height:24px;animation-delay:.2s}
+.voice-wave span:nth-child(4){height:16px;animation-delay:.3s}
+.voice-wave span:nth-child(5){height:8px;animation-delay:.4s}
+@keyframes wave{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.8)}}
 
 /* TASKS */
 .tv{background:var(--w)}
@@ -192,6 +204,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <textarea class="ci" id="ci" placeholder="اسأل عن رسائلك أو مشاريعك..." rows="1"
         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"
         oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
+      <div class="voice-wave" id="voice-wave"><span></span><span></span><span></span><span></span><span></span></div>
+      <button class="mic-btn" id="mic-btn" onclick="toggleVoice()" title="تحدث">🎤</button>
       <button class="cs" id="csbtn" onclick="sendChat()">↑</button>
     </div>
   </div>
@@ -643,6 +657,70 @@ if(!AK){const k=prompt('أدخل مفتاح Claude API:');if(k){localStorage.set
 if(hmTok)updBadges();
 renderT();updS();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js');
+
+/* ── Voice ── */
+let recognition=null,synth=window.speechSynthesis,isSpeaking=false,isListening=false;
+
+function initRecognition(){
+  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
+    alert('متصفحك لا يدعم التعرف على الصوت. استخدم Chrome.');return null;
+  }
+  const R=window.webkitSpeechRecognition||window.SpeechRecognition;
+  const r=new R();
+  r.lang='ar-SA';r.continuous=false;r.interimResults=true;
+  r.onstart=()=>{
+    isListening=true;
+    document.getElementById('mic-btn').classList.add('listening');
+    document.getElementById('mic-btn').textContent='⏹';
+    document.getElementById('voice-wave').classList.add('active');
+    document.getElementById('ci').placeholder='أتحدث...';
+  };
+  r.onresult=(e)=>{
+    const transcript=Array.from(e.results).map(r=>r[0].transcript).join('');
+    document.getElementById('ci').value=transcript;
+    if(e.results[e.results.length-1].isFinal){
+      stopListening();
+      sendChat();
+    }
+  };
+  r.onerror=(e)=>{stopListening();};
+  r.onend=()=>{stopListening();};
+  return r;
+}
+
+function stopListening(){
+  isListening=false;
+  const btn=document.getElementById('mic-btn');
+  btn.classList.remove('listening');
+  btn.textContent='🎤';
+  document.getElementById('voice-wave').classList.remove('active');
+  document.getElementById('ci').placeholder='اسأل عن رسائلك أو مشاريعك...';
+  if(recognition)recognition.stop();
+}
+
+function toggleVoice(){
+  if(synth.speaking){synth.cancel();}
+  if(isListening){stopListening();return;}
+  recognition=initRecognition();
+  if(recognition)recognition.start();
+}
+
+function speakText(text){
+  if(!synth)return;
+  synth.cancel();
+  // Clean text from markdown
+  const clean=text.replace(/[*_#`]/g,'').replace(/\[ACTION:[^\]]*\]/g,'').trim();
+  if(!clean)return;
+  const utt=new SpeechSynthesisUtterance(clean);
+  utt.lang='ar-SA';utt.rate=1;utt.pitch=1;
+  // Try to find Arabic voice
+  const voices=synth.getVoices();
+  const arVoice=voices.find(v=>v.lang.startsWith('ar'));
+  if(arVoice)utt.voice=arVoice;
+  isSpeaking=true;
+  utt.onend=()=>{isSpeaking=false;};
+  synth.speak(utt);
+}
 </script>
 </body>
 </html>
