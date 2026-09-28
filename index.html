@@ -639,10 +639,7 @@ async function sendChat(){
 مثال: إذا طلب المستخدم إرسال رسالة، أجب وأضف [ACTION:SEND:to@email.com|||الموضوع|||النص]`;
 
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':AK,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:1024,system:fullSys+ghCtx+(mailCtx?"
-
-بيانات البريد:
-"+mailCtx:""),messages:hist})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':AK,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:1024,system:fullSys+ghCtx+(mailCtx?'\n\nبيانات البريد:\n'+mailCtx:''),messages:hist})});
     const d=await r.json();const rep=d.content?.[0]?.text||'حاول مرة أخرى.';
     tk.remove();
     const{text}=await processAIActions(rep);
