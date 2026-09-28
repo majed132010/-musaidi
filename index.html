@@ -644,6 +644,7 @@ async function sendChat(){
     tk.remove();
     const{text}=await processAIActions(rep);
     am(text,'ai');hist.push({role:'assistant',content:rep});
+    speakText(text);
   }catch(e){tk.querySelector('.mb').textContent='خطأ في الاتصال.';}
   btn.disabled=false;
 }
