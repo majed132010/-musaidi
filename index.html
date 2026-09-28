@@ -704,7 +704,7 @@ function toggleVoice(){
 }
 
 let audioUnlocked=false;
-const OPENAI_KEY='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';
+// OpenAI TTS via Vercel proxy
 function unlockAudio(){
   if(audioUnlocked)return;
   const u=new SpeechSynthesisUtterance('');
@@ -718,10 +718,10 @@ async function speakText(text){
   const clean=text.replace(/[*_#`]/g,'').replace(/\[ACTION:[^\]]*\]/g,'').trim().slice(0,500);
   if(!clean)return;
   try{
-    const res=await fetch('https://api.openai.com/v1/audio/speech',{
+    const res=await fetch('/api/tts',{
       method:'POST',
-      headers:{'Authorization':'Bearer '+OPENAI_KEY,'Content-Type':'application/json'},
-      body:JSON.stringify({model:'tts-1',input:clean,voice:'nova',speed:1.0})
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({text:clean})
     });
     if(!res.ok)throw new Error('OpenAI TTS failed: '+res.status);
     const blob=await res.blob();
