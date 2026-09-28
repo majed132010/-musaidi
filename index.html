@@ -704,8 +704,7 @@ function toggleVoice(){
 }
 
 let audioUnlocked=false;
-const EL_KEY='sk_4225f08dae52e89c99e53f1872f6593dae9ae08caff8a4a3';
-const EL_VOICE='21m00Tcm4TlvDq8ikWAM'; // Rachel - clear Arabic-compatible voice
+const OPENAI_KEY='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';
 function unlockAudio(){
   if(audioUnlocked)return;
   const u=new SpeechSynthesisUtterance('');
@@ -719,19 +718,21 @@ async function speakText(text){
   const clean=text.replace(/[*_#`]/g,'').replace(/\[ACTION:[^\]]*\]/g,'').trim().slice(0,500);
   if(!clean)return;
   try{
-    const res=await fetch('https://api.elevenlabs.io/v1/text-to-speech/'+EL_VOICE+'/stream',{
+    const res=await fetch('https://api.openai.com/v1/audio/speech',{
       method:'POST',
-      headers:{'xi-api-key':EL_KEY,'Content-Type':'application/json'},
-      body:JSON.stringify({text:clean,model_id:'eleven_multilingual_v2',voice_settings:{stability:0.5,similarity_boost:0.75}})
+      headers:{'Authorization':'Bearer '+OPENAI_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({model:'tts-1',input:clean,voice:'nova',speed:1.0})
     });
-    if(!res.ok)throw new Error('EL failed');
+    if(!res.ok)throw new Error('OpenAI TTS failed: '+res.status);
     const blob=await res.blob();
     const url=URL.createObjectURL(blob);
     const audio=new Audio(url);
     isSpeaking=true;
     audio.onended=()=>{isSpeaking=false;URL.revokeObjectURL(url);};
-    audio.play();
+    audio.onerror=(e)=>{console.log('audio error',e);isSpeaking=false;};
+    await audio.play();
   }catch(e){
+    console.log('TTS error:',e);
     // Fallback to browser TTS
     if(!synth)return;
     synth.cancel();
