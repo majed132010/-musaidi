@@ -715,18 +715,22 @@ document.addEventListener('touchstart',unlockAudio,{once:true});
 function speakText(text){
   if(!synth)return;
   synth.cancel();
-  // Clean text from markdown
   const clean=text.replace(/[*_#`]/g,'').replace(/\[ACTION:[^\]]*\]/g,'').trim();
   if(!clean)return;
-  const utt=new SpeechSynthesisUtterance(clean);
-  utt.lang='ar-SA';utt.rate=1;utt.pitch=1;
-  // Try to find Arabic voice
-  const voices=synth.getVoices();
-  const arVoice=voices.find(v=>v.lang.startsWith('ar'));
-  if(arVoice)utt.voice=arVoice;
-  isSpeaking=true;
-  utt.onend=()=>{isSpeaking=false;};
-  synth.speak(utt);
+  // Wait for voices to load then speak
+  const doSpeak=()=>{
+    const utt=new SpeechSynthesisUtterance(clean);
+    utt.lang='ar-SA';utt.rate=0.95;utt.pitch=1;
+    const voices=synth.getVoices();
+    const arVoice=voices.find(v=>v.lang==='ar-SA')||voices.find(v=>v.lang.startsWith('ar'));
+    if(arVoice)utt.voice=arVoice;
+    isSpeaking=true;
+    utt.onend=()=>{isSpeaking=false;};
+    utt.onerror=(e)=>{console.log('speech error',e);isSpeaking=false;};
+    synth.speak(utt);
+  };
+  if(synth.getVoices().length>0)doSpeak();
+  else{synth.onvoiceschanged=()=>{doSpeak();synth.onvoiceschanged=null;};}
 }
 </script>
 </body>
