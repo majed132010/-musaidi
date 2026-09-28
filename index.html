@@ -702,6 +702,16 @@ function toggleVoice(){
   if(recognition)recognition.start();
 }
 
+let audioUnlocked=false;
+function unlockAudio(){
+  if(audioUnlocked)return;
+  const u=new SpeechSynthesisUtterance('');
+  window.speechSynthesis.speak(u);
+  audioUnlocked=true;
+}
+document.addEventListener('click',unlockAudio,{once:true});
+document.addEventListener('touchstart',unlockAudio,{once:true});
+
 function speakText(text){
   if(!synth)return;
   synth.cancel();
