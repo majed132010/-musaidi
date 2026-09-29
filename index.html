@@ -826,6 +826,23 @@ function stopVoiceMode(){
   setVoiceModeUI('off');
 }
 
+const vmDone=new Set();
+
+async function vmRunTool(name,args){
+  try{
+    if(name==='get_mail_summary')return (await getMailCtx()).slice(0,4000);
+    if(name==='search_gmail')return String(await aiSearchGmail(String((args&&args.query)||''))).slice(0,4000);
+    if(name==='get_github_updates')return getGhSummary().slice(0,4000);
+    if(name==='get_tasks'){
+      if(!tasks.length)return 'لا توجد مهام.';
+      return tasks.map(t=>`${t.done?'[منجزة]':'[مفتوحة]'} ${t.title} | المشروع: ${t.project} | الأولوية: ${t.priority}`).join('\n').slice(0,4000);
+    }
+    return 'أداة غير معروفة.';
+  }catch(e){
+    return 'تعذر تنفيذ الأداة: '+(e&&e.message?e.message:e);
+  }
+}
+
 async function startVoiceMode(){
   if(vmActive)return;
   vmActive=true;
@@ -846,7 +863,27 @@ async function startVoiceMode(){
     vmStream.getTracks().forEach(t=>pc.addTrack(t,vmStream));
 
     const dc=pc.createDataChannel('oai-events');
-    dc.onmessage=e=>{try{const m=JSON.parse(e.data);if(m.type==='error')console.error('Realtime error',m);}catch(_){}};
+    dc.onmessage=async e=>{
+      let m;
+      try{m=JSON.parse(e.data);}catch(_){return;}
+      if(m.type==='error'){console.error('Realtime error',m);return;}
+      if(m.type==='response.done'&&m.response&&Array.isArray(m.response.output)){
+        let ran=false;
+        for(const item of m.response.output){
+          if(item.type==='function_call'&&item.call_id&&!vmDone.has(item.call_id)){
+            vmDone.add(item.call_id);
+            let args={};
+            try{args=JSON.parse(item.arguments||'{}');}catch(_){ }
+            const out=await vmRunTool(item.name,args);
+            if(dc.readyState==='open'){
+              dc.send(JSON.stringify({type:'conversation.item.create',item:{type:'function_call_output',call_id:item.call_id,output:out}}));
+              ran=true;
+            }
+          }
+        }
+        if(ran&&dc.readyState==='open')dc.send(JSON.stringify({type:'response.create'}));
+      }
+    };
     pc.onconnectionstatechange=()=>{if(pc.connectionState==='failed'||pc.connectionState==='closed')stopVoiceMode();};
 
     const offer=await pc.createOffer();
