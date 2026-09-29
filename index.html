@@ -362,7 +362,7 @@ async function autoSyncGitHub(){
   if(Date.now()-ghLastSync>GH_INTERVAL)await fetchGitHub();
 }
 
-const SYS=`أنت مساعد شخصي لأبو أمجد (ماجد خزاعي)، مطور عربي مستقل من السعودية. لديك صلاحية قراءة بريده وآخر تحديثات GitHub لمشاريعه الستة. أجب بالعربية بشكل مختصر ومفيد ومباشر.`;
+const SYS=`أنت مساعد شخصي ذكي وحرّ لأبو أمجد (ماجد خزاعي)، مطور عربي مستقل من السعودية. تجيب عن أي موضوع، لا عن مشاريعه وبريده فقط: برمجة، أفكار، شرح، نقاش، كتابة. فكّر بعمق وأعطِ إجابات كاملة ومفيدة عندما يحتاج السؤال ذلك، واختصر فقط عندما يكون السؤال بسيطًا. استخدم بيانات GitHub والبريد عندما تكون ذات صلة فقط.`;
 
 let AK=localStorage.getItem('claude_key')||'';
 let tasks=JSON.parse(localStorage.getItem('musaidi_tasks')||'[]');
@@ -639,7 +639,7 @@ async function sendChat(){
 مثال: إذا طلب المستخدم إرسال رسالة، أجب وأضف [ACTION:SEND:to@email.com|||الموضوع|||النص]`;
 
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':AK,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:1024,system:fullSys+ghCtx+(mailCtx?'\n\nبيانات البريد:\n'+mailCtx:''),messages:hist})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':AK,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:4096,system:fullSys+ghCtx+(mailCtx?'\n\nبيانات البريد:\n'+mailCtx:''),messages:hist})});
     const d=await r.json();const rep=d.content?.[0]?.text||'حاول مرة أخرى.';
     tk.remove();
     const{text}=await processAIActions(rep);
@@ -723,22 +723,33 @@ async function speakText(text){
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({text:clean})
     });
-    if(!res.ok)throw new Error('OpenAI TTS failed: '+res.status);
+
+    if(!res.ok){
+      const payload=await res.json().catch(()=>({}));
+      throw new Error(payload.error || 'OpenAI TTS failed: '+res.status);
+    }
+
     const blob=await res.blob();
     const url=URL.createObjectURL(blob);
     const audio=new Audio(url);
     isSpeaking=true;
     audio.onended=()=>{isSpeaking=false;URL.revokeObjectURL(url);};
-    audio.onerror=(e)=>{console.log('audio error',e);isSpeaking=false;};
+    audio.onerror=(e)=>{console.error('audio error',e);isSpeaking=false;URL.revokeObjectURL(url);};
     await audio.play();
+    return;
   }catch(e){
-    console.log('TTS error:',e);
-    // Fallback to browser TTS
+    console.error('OpenAI TTS error:', e);
+
+    if(location.protocol==='file:'){
+      alert('شغّل المشروع عبر خادم محلي مثل Vercel أو Node، لأن مسار /api/tts لا يعمل عند فتح الملف مباشرة.');
+      return;
+    }
+
     if(!synth)return;
     synth.cancel();
     const utt=new SpeechSynthesisUtterance(clean);
     utt.lang='ar-SA';
-    const arVoice=synth.getVoices().find(v=>v.lang==='ar-SA');
+    const arVoice=synth.getVoices().find(v=>v.lang && v.lang.toLowerCase().startsWith('ar'));
     if(arVoice)utt.voice=arVoice;
     synth.speak(utt);
   }
