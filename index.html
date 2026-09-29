@@ -362,7 +362,15 @@ async function autoSyncGitHub(){
   if(Date.now()-ghLastSync>GH_INTERVAL)await fetchGitHub();
 }
 
-const SYS=`أنت مساعد شخصي ذكي وحرّ لأبو أمجد (ماجد خزاعي)، مطور عربي مستقل من السعودية. تجيب عن أي موضوع، لا عن مشاريعه وبريده فقط: برمجة، أفكار، شرح، نقاش، كتابة. فكّر بعمق وأعطِ إجابات كاملة ومفيدة عندما يحتاج السؤال ذلك، واختصر فقط عندما يكون السؤال بسيطًا. استخدم بيانات GitHub والبريد عندما تكون ذات صلة فقط.`;
+const SYS=`أنت مساعد شخصي ذكي لأبو أمجد (ماجد خزاعي)، مطور عربي مستقل من السعودية. تتكلم معه كصديق خبير: بشكل طبيعي وعفوي وواضح، لا كتقرير مكتوب.
+
+الفهم: افهم الهدف من طلبه وليس كلماته فقط. إذا كان الطلب واضحًا فنفّذه دون أسئلة زائدة. وإذا نقصت معلومة أساسية تمنع التنفيذ فاسأل عنها وحدها بسؤال واحد. وإذا وُجد أكثر من طريق فاختر الأبسط والأكثر موثوقية، واتخذ القرارات البسيطة الآمنة نيابةً عنه.
+
+ما تستطيع فعله فعلًا: قراءة بريده في Gmail وHotmail، وإرسال رسائل Gmail وحذفها والبحث فيها، والاطلاع على آخر تحديثات مشاريعه على GitHub، ومتابعة مهامه. أي شيء آخر مثل تصفح الإنترنت أو التقويم أو الحجوزات أو واتساب غير متاح لك الآن، فقل ذلك بصراحة وإيجاز واعرض أقرب بديل تقدر عليه. لا تدّعِ أبدًا أنك نفّذت شيئًا لم تنفذه فعلًا، ولا تقل لا أستطيع قبل أن تفكر فيما يمكنك فعله.
+
+التأكيد: قبل أي إجراء لا يمكن التراجع عنه، كحذف بريد أو دفع أو شراء أو توقيع أو إرسال معلومات حساسة، اطلب منه تأكيدًا صريحًا أولًا. ولا ترسل أي رسالة إلا بطلب واضح، واكتبها بنبرة طبيعية دون تغيير المعنى الذي يقصده. لا تتخذ قرارات مالية أو قانونية أو صحية مهمة نيابةً عنه، ولا تفترض معلومات شخصية غير مؤكدة.
+
+الأسلوب: تكلم كأن ردك سيُقرأ بصوت عالٍ. جمل قصيرة طبيعية، بلا عناوين ولا جداول ولا قوائم ولا رموز تعبيرية، وبلا كود إلا إذا طلبه. اجعل جواب السؤال البسيط قصيرًا، أما السؤال الذي يحتاج شرحًا فاشرحه بعمق لكن بسرد متصل. وعند إنجاز مهمة قل ما تم في جملتين أو ثلاث، وما يحتاج موافقته إن وُجد.`;
 
 let AK=localStorage.getItem('claude_key')||'';
 let tasks=JSON.parse(localStorage.getItem('musaidi_tasks')||'[]');
@@ -714,45 +722,88 @@ function unlockAudio(){
 document.addEventListener('click',unlockAudio,{once:true});
 document.addEventListener('touchstart',unlockAudio,{once:true});
 
+let speakSession=0;
+let currentAudio=null;
+
+function stopSpeaking(){
+  speakSession++;
+  if(currentAudio){try{currentAudio.pause();}catch(e){} currentAudio=null;}
+  if(synth)synth.cancel();
+  isSpeaking=false;
+}
+
 async function speakText(text){
-  const clean=text.replace(/[*_#`]/g,'').replace(/\[ACTION:[^\]]*\]/g,'').trim().slice(0,500);
+  const clean=text.replace(/[*_#`]/g,'').replace(/\[ACTION:[^\]]*\]/g,'').trim();
   if(!clean)return;
-  try{
-    const res=await fetch('/api/tts',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({text:clean})
-    });
 
+  stopSpeaking();
+  const session=speakSession;
+
+  const sentences=clean.split(/(?<=[.!?؟،])\s+|\n+/).map(s=>s.trim()).filter(Boolean);
+  const chunks=[];
+  let buf='';
+  for(const s of sentences){
+    if(buf&&(buf+' '+s).length>300){chunks.push(buf);buf=s;}
+    else buf=buf?buf+' '+s:s;
+  }
+  if(buf)chunks.push(buf);
+  if(!chunks.length)return;
+
+  const fetchChunk=async(t)=>{
+    const res=await fetch('/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t})});
     if(!res.ok){
-      const payload=await res.json().catch(()=>({}));
-      throw new Error(payload.error || 'OpenAI TTS failed: '+res.status);
+      const p=await res.json().catch(()=>({}));
+      throw new Error(p.error||'OpenAI TTS failed: '+res.status);
     }
+    return URL.createObjectURL(await res.blob());
+  };
 
-    const blob=await res.blob();
-    const url=URL.createObjectURL(blob);
-    const audio=new Audio(url);
-    isSpeaking=true;
-    audio.onended=()=>{isSpeaking=false;URL.revokeObjectURL(url);};
-    audio.onerror=(e)=>{console.error('audio error',e);isSpeaking=false;URL.revokeObjectURL(url);};
-    await audio.play();
-    return;
-  }catch(e){
-    console.error('OpenAI TTS error:', e);
-
-    if(location.protocol==='file:'){
-      alert('شغّل المشروع عبر خادم محلي مثل Vercel أو Node، لأن مسار /api/tts لا يعمل عند فتح الملف مباشرة.');
-      return;
-    }
-
-    if(!synth)return;
+  const fallback=()=>{
+    if(!synth||session!==speakSession)return;
     synth.cancel();
     const utt=new SpeechSynthesisUtterance(clean);
     utt.lang='ar-SA';
-    const arVoice=synth.getVoices().find(v=>v.lang && v.lang.toLowerCase().startsWith('ar'));
-    if(arVoice)utt.voice=arVoice;
+    const v=synth.getVoices().find(v=>v.lang&&v.lang.toLowerCase().startsWith('ar'));
+    if(v)utt.voice=v;
     synth.speak(utt);
+  };
+
+  isSpeaking=true;
+  let nextPromise=fetchChunk(chunks[0]);
+  nextPromise.catch(()=>{});
+
+  for(let i=0;i<chunks.length;i++){
+    let url;
+    try{url=await nextPromise;}
+    catch(e){
+      console.error('OpenAI TTS error:',e);
+      if(i===0)fallback();
+      break;
+    }
+    if(session!==speakSession){URL.revokeObjectURL(url);return;}
+
+    nextPromise=i+1<chunks.length?fetchChunk(chunks[i+1]):null;
+    if(nextPromise)nextPromise.catch(()=>{});
+
+    const audio=new Audio(url);
+    currentAudio=audio;
+    try{
+      await new Promise((resolve,reject)=>{
+        audio.onended=resolve;
+        audio.onerror=reject;
+        audio.play().catch(reject);
+      });
+    }catch(e){
+      console.error('audio error',e);
+      URL.revokeObjectURL(url);
+      if(i===0)fallback();
+      break;
+    }
+    URL.revokeObjectURL(url);
+    if(session!==speakSession)return;
   }
+
+  if(session===speakSession){isSpeaking=false;currentAudio=null;}
 }
 </script>
 </body>
