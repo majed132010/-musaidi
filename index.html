@@ -648,7 +648,7 @@ async function sendChat(){
 
   try{
     const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':AK,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-5-5',max_tokens:4096,system:fullSys+ghCtx+(mailCtx?'\n\nبيانات البريد:\n'+mailCtx:''),messages:hist})});
-    const d=await r.json();const rep=d.content?.[0]?.text||'حاول مرة أخرى.';
+    const d=await r.json();const rep=(d.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('')||'حاول مرة أخرى.';
     tk.remove();
     const{text}=await processAIActions(rep);
     am(text,'ai');hist.push({role:'assistant',content:rep});
