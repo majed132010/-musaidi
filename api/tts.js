@@ -3,7 +3,14 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+  const origin = req.headers.origin || '';
+  const host = req.headers.host || '';
+  if (!origin.endsWith('://' + host)) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
+  let body;
+  try { body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {}); } catch (e) { return res.status(400).json({ error: 'Invalid JSON' }); }
   const text = typeof body.text === 'string' ? body.text.trim() : '';
 
   if (!text) return res.status(400).json({ error: 'No text provided' });
@@ -36,7 +43,6 @@ export default async function handler(req, res) {
     const buffer = Buffer.from(await response.arrayBuffer());
     res.setHeader('Content-Type', response.headers.get('content-type') || 'audio/mpeg');
     res.setHeader('Cache-Control', 'no-store');
-    res.setHeader('Access-Control-Allow-Origin', '*');
     return res.send(buffer);
   } catch (e) {
     console.error('OpenAI TTS API error:', e);
