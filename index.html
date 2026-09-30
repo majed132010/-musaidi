@@ -166,6 +166,16 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .hm-btns{display:flex;gap:8px}
 .hm-ok{flex:1;padding:10px;background:#0078d4;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
 .hm-cl{flex:1;padding:10px;background:none;border:1px solid #ddd;border-radius:8px;font-size:14px;cursor:pointer;font-family:inherit;color:var(--t2)}
+.mc-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px}
+.mc-box{background:#fff;border-radius:18px;width:min(460px,94vw);max-height:86vh;overflow:auto;padding:20px;box-shadow:0 25px 60px rgba(0,0,0,.25)}
+.mc-title{font-size:18px;font-weight:700;margin-bottom:12px}
+.mc-row{margin-bottom:10px}
+.mc-k{font-size:12px;color:#777;margin-bottom:2px}
+.mc-v{font-size:14px;color:#111;white-space:pre-wrap;word-break:break-word;background:#f6f6f6;border-radius:10px;padding:8px 10px}
+.mc-btns{display:flex;justify-content:flex-end;gap:10px;margin-top:16px}
+.mc-no,.mc-ok{padding:10px 18px;border:none;border-radius:10px;cursor:pointer;font-size:14px}
+.mc-no{background:#f2f2f2;color:#333}
+.mc-ok{background:#075e54;color:#fff}
 </style>
 </head>
 <body>
@@ -607,6 +617,116 @@ async function aiSearchGmail(query){
   }catch(e){return'[خطأ في البحث]';}
 }
 
+function mailUtf8(b64url){
+  try{
+    const bin=atob(String(b64url).replace(/-/g,'+').replace(/_/g,'/'));
+    const bytes=Uint8Array.from(bin,c=>c.charCodeAt(0));
+    return new TextDecoder('utf-8').decode(bytes);
+  }catch(e){return '';}
+}
+
+function mailHtmlToText(h){
+  const d=new DOMParser().parseFromString(h,'text/html');
+  d.querySelectorAll('script,style,head').forEach(n=>n.remove());
+  return (d.body?d.body.textContent:'').replace(/[ \t]+/g,' ').replace(/\s*\n\s*/g,'\n').replace(/\n{3,}/g,'\n\n').trim();
+}
+
+function mailClean(s){return String(s||'').replace(/[\r\n]+/g,' ').trim();}
+
+function mailValidAddr(a){return /^[^\s<>@,;]+@[^\s<>@,;]+\.[^\s<>@,;]+$/.test(a);}
+
+async function mailRead(id){
+  if(!gTok)return {error:'Gmail غير مرتبط. سجّل الدخول من تبويب البريد.'};
+  const f=await gf(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${encodeURIComponent(id)}?format=full`);
+  if(!f||f.error)return {error:'تعذر فتح الرسالة'};
+  let plain='',html='';
+  const walk=p=>{
+    if(!p)return;
+    if(p.mimeType==='text/plain'&&p.body&&p.body.data&&!plain)plain=mailUtf8(p.body.data);
+    else if(p.mimeType==='text/html'&&p.body&&p.body.data&&!html)html=mailUtf8(p.body.data);
+    if(p.parts)p.parts.forEach(walk);
+  };
+  walk(f.payload);
+  const hdr=n=>{const h=((f.payload&&f.payload.headers)||[]).find(x=>x.name.toLowerCase()===n);return h?h.value:'';};
+  return {id:f.id,threadId:f.threadId,from:hdr('from'),subject:hdr('subject'),date:hdr('date'),messageId:hdr('message-id'),unread:!!(f.labelIds&&f.labelIds.includes('UNREAD')),text:(plain||mailHtmlToText(html)).slice(0,3000)};
+}
+
+async function mailSend(to,subject,body,reply){
+  if(!gTok)return 'Gmail غير مرتبط';
+  to=mailClean(to);subject=mailClean(subject);
+  if(!mailValidAddr(to))return 'عنوان المستلم غير صالح';
+  let h=`To: ${to}\r\nSubject: =?UTF-8?B?${btoa(unescape(encodeURIComponent(subject)))}?=\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: base64\r\n`;
+  if(reply&&reply.messageId){const mid=mailClean(reply.messageId);h+=`In-Reply-To: ${mid}\r\nReferences: ${mid}\r\n`;}
+  const b64=btoa(unescape(encodeURIComponent(String(body||'')))).replace(/(.{76})/g,'$1\r\n');
+  const raw=btoa(h+'\r\n'+b64).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  const payload={raw};
+  if(reply&&reply.threadId)payload.threadId=reply.threadId;
+  const r=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send',{method:'POST',headers:{'Authorization':'Bearer '+gTok,'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  return r.ok?'ok':'فشل الإرسال ('+r.status+')';
+}
+
+async function mailModify(id,body){
+  if(!gTok)return {status:'failed',error:'Gmail غير مرتبط'};
+  const r=await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${encodeURIComponent(id)}/modify`,{method:'POST',headers:{'Authorization':'Bearer '+gTok,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  return r.ok?{status:'done'}:{status:'failed',error:'HTTP '+r.status};
+}
+
+function mailConfirm(title,rows,okText){
+  return new Promise(resolve=>{
+    const old=document.getElementById('mc-overlay');if(old)old.remove();
+    const ov=document.createElement('div');ov.id='mc-overlay';ov.className='mc-overlay';
+    const box=document.createElement('div');box.className='mc-box';
+    const h=document.createElement('div');h.className='mc-title';h.textContent=title;box.appendChild(h);
+    rows.forEach(([k,v])=>{
+      const r=document.createElement('div');r.className='mc-row';
+      const kk=document.createElement('div');kk.className='mc-k';kk.textContent=k;
+      const vv=document.createElement('div');vv.className='mc-v';vv.textContent=v;
+      r.appendChild(kk);r.appendChild(vv);box.appendChild(r);
+    });
+    const btns=document.createElement('div');btns.className='mc-btns';
+    const no=document.createElement('button');no.className='mc-no';no.textContent='إلغاء';
+    const ok=document.createElement('button');ok.className='mc-ok';ok.textContent=okText;
+    const done=v=>{ov.remove();resolve(v);};
+    no.onclick=()=>done(false);ok.onclick=()=>done(true);
+    btns.appendChild(no);btns.appendChild(ok);box.appendChild(btns);
+    ov.appendChild(box);document.body.appendChild(ov);
+  });
+}
+
+async function mailActSend(to,subject,body){
+  if(!gTok)return {status:'failed',error:'Gmail غير مرتبط'};
+  to=mailClean(to);subject=mailClean(subject);
+  if(!mailValidAddr(to))return {status:'failed',error:'عنوان المستلم غير صالح'};
+  const ok=await mailConfirm('تأكيد إرسال رسالة',[['إلى',to],['الموضوع',subject],['النص',String(body||'')]],'إرسال');
+  if(!ok)return {status:'cancelled'};
+  const r=await mailSend(to,subject,body);
+  return r==='ok'?{status:'sent'}:{status:'failed',error:r};
+}
+
+async function mailActReply(id,body){
+  const m=await mailRead(id);
+  if(m.error)return {status:'failed',error:m.error};
+  const to=mailClean((m.from.match(/<([^>]+)>/)||[])[1]||m.from);
+  if(!mailValidAddr(to))return {status:'failed',error:'عنوان المرسل غير صالح'};
+  const subject=/^re:/i.test(m.subject)?m.subject:'Re: '+m.subject;
+  const ok=await mailConfirm('تأكيد إرسال رد',[['إلى',to],['الموضوع',subject],['النص',String(body||'')]],'إرسال الرد');
+  if(!ok)return {status:'cancelled'};
+  const r=await mailSend(to,subject,body,{threadId:m.threadId,messageId:m.messageId});
+  return r==='ok'?{status:'sent'}:{status:'failed',error:r};
+}
+
+async function mailActDelete(id){
+  const m=await mailRead(id);
+  if(m.error)return {status:'failed',error:m.error};
+  const ok=await mailConfirm('تأكيد حذف رسالة',[['من',m.from],['الموضوع',m.subject]],'نقل إلى المهملات');
+  if(!ok)return {status:'cancelled'};
+  const r=await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${encodeURIComponent(id)}/trash`,{method:'POST',headers:{Authorization:'Bearer '+gTok}});
+  return r.ok?{status:'trashed'}:{status:'failed',error:'HTTP '+r.status};
+}
+
+function mailActMarkRead(id){return mailModify(id,{removeLabelIds:['UNREAD']});}
+function mailActArchive(id){return mailModify(id,{removeLabelIds:['INBOX']});}
+
 async function processAIActions(reply){
   // Parse AI actions like [ACTION:type:params]
   const actionRe=/\[ACTION:(SEND|DELETE|SEARCH):([^\]]*)\]/g;
@@ -829,17 +949,28 @@ function stopVoiceMode(){
 const vmDone=new Set();
 
 async function vmRunTool(name,args){
+  args=args||{};
   try{
     if(name==='get_mail_summary')return (await getMailCtx()).slice(0,4000);
-    if(name==='search_gmail')return String(await aiSearchGmail(String((args&&args.query)||''))).slice(0,4000);
+    if(name==='search_gmail')return String(await aiSearchGmail(String(args.query||''))).slice(0,4000);
     if(name==='get_github_updates')return getGhSummary().slice(0,4000);
     if(name==='get_tasks'){
       if(!tasks.length)return 'لا توجد مهام.';
       return tasks.map(t=>`${t.done?'[منجزة]':'[مفتوحة]'} ${t.title} | المشروع: ${t.project} | الأولوية: ${t.priority}`).join('\n').slice(0,4000);
     }
-    return 'أداة غير معروفة.';
+    if(name==='read_email'){
+      const m=await mailRead(String(args.id||''));
+      if(m.error)return JSON.stringify({status:'failed',error:m.error});
+      return JSON.stringify({status:'ok',from:m.from,subject:m.subject,date:m.date,text:m.text});
+    }
+    if(name==='mark_email_read')return JSON.stringify(await mailActMarkRead(String(args.id||'')));
+    if(name==='archive_email')return JSON.stringify(await mailActArchive(String(args.id||'')));
+    if(name==='send_email')return JSON.stringify(await mailActSend(String(args.to||''),String(args.subject||''),String(args.body||'')));
+    if(name==='reply_to_email')return JSON.stringify(await mailActReply(String(args.id||''),String(args.body||'')));
+    if(name==='delete_email')return JSON.stringify(await mailActDelete(String(args.id||'')));
+    return JSON.stringify({status:'failed',error:'أداة غير معروفة.'});
   }catch(e){
-    return 'تعذر تنفيذ الأداة: '+(e&&e.message?e.message:e);
+    return JSON.stringify({status:'failed',error:(e&&e.message)?e.message:String(e)});
   }
 }
 
