@@ -176,6 +176,9 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .mc-no,.mc-ok{padding:10px 18px;border:none;border-radius:10px;cursor:pointer;font-size:14px}
 .mc-no{background:#f2f2f2;color:#333}
 .mc-ok{background:#075e54;color:#fff}
+.mcode{direction:ltr;text-align:left;background:#0f1a17;color:#e6f2ee;padding:10px 12px;border-radius:10px;overflow-x:auto;font-size:12.5px;line-height:1.5;margin:6px 0;white-space:pre}
+.mcode code{font-family:Consolas,Menlo,monospace}
+.mic{direction:ltr;unicode-bidi:embed;background:rgba(0,0,0,.08);padding:1px 5px;border-radius:5px;font-family:Consolas,Menlo,monospace;font-size:.92em}
 </style>
 </head>
 <body>
@@ -381,7 +384,7 @@ const SYS=`أنت مساعد شخصي ذكي لأبو أمجد (ماجد خزا�
 
 التأكيد: قبل أي إجراء لا يمكن التراجع عنه، كحذف بريد أو دفع أو شراء أو توقيع أو إرسال معلومات حساسة، اطلب منه تأكيدًا صريحًا أولًا. ولا ترسل أي رسالة إلا بطلب واضح، واكتبها بنبرة طبيعية دون تغيير المعنى الذي يقصده. لا تتخذ قرارات مالية أو قانونية أو صحية مهمة نيابةً عنه، ولا تفترض معلومات شخصية غير مؤكدة.
 
-الأسلوب: تكلم كأن ردك سيُقرأ بصوت عالٍ. جمل قصيرة طبيعية، بلا عناوين ولا جداول ولا قوائم ولا رموز تعبيرية، وبلا كود إلا إذا طلبه. اجعل جواب السؤال البسيط قصيرًا، أما السؤال الذي يحتاج شرحًا فاشرحه بعمق لكن بسرد متصل. وعند إنجاز مهمة قل ما تم في جملتين أو ثلاث، وما يحتاج موافقته إن وُجد. تكلم بلهجة سعودية بيضاء طبيعية كما يتكلم صديق مقرّب، وتجنب الفصحى الثقيلة. استخدم كلمات مثل: أبشر، وش رأيك، الحين، مرة، يعني، طيب، وكذا، وابتعد عن التكلف. ولا تستخدم علامات النجمة ولا أي تنسيق Markdown مطلقًا.`;
+الأسلوب: تكلم كأن ردك سيُقرأ بصوت عالٍ. جمل قصيرة طبيعية، بلا عناوين ولا جداول ولا قوائم ولا رموز تعبيرية، وبلا كود إلا إذا طلبه. اجعل جواب السؤال البسيط قصيرًا، أما السؤال الذي يحتاج شرحًا فاشرحه بعمق لكن بسرد متصل. وعند إنجاز مهمة قل ما تم في جملتين أو ثلاث، وما يحتاج موافقته إن وُجد. تكلم بلهجة سعودية بيضاء طبيعية كما يتكلم صديق مقرّب، وتجنب الفصحى الثقيلة. استخدم كلمات مثل: أبشر، وش رأيك، الحين، مرة، يعني، طيب، وكذا، وابتعد عن التكلف. ولا تستخدم علامات النجمة ولا أي تنسيق Markdown مطلقًا، إلا عند كتابة كود برمجي فاكتب الكود دائمًا داخل كتلة كود تبدأ بثلاث علامات \`\`\` وتنتهي بثلاث علامات \`\`\`، ولا تكتب أي كود خارج كتلة.`;
 
 let AK=localStorage.getItem('claude_key')||'';
 let tasks=JSON.parse(localStorage.getItem('musaidi_tasks')||'[]');
@@ -579,13 +582,26 @@ function updBadges(){
   if(gTok){gb.textContent='📧 Gmail: متصل';gb.classList.add('ok');}
   if(hmTok){hb.textContent='📨 Hotmail: متصل';hb.classList.add('ok');}
 }
+function mdRender(t){
+  return String(t==null?'':t).split('```').map((p,i)=>{
+    if(i%2===1){
+      const c=p.replace(/^[a-zA-Z0-9_+#.-]*\n/,'').replace(/\n$/,'');
+      return '<pre class="mcode"><code>'+escHtml(c)+'</code></pre>';
+    }
+    let s=escHtml(p);
+    s=s.replace(/`([^`\n]+)`/g,'<code class="mic">$1</code>');
+    s=s.replace(/\*\*([^*\n]+)\*\*/g,'<b>$1</b>');
+    return s;
+  }).join('');
+}
 function am(text,type){
   const w=document.querySelector('.cw');if(w)w.remove();
   const msgs=document.getElementById('chat-msgs');
   const d=document.createElement('div');
   d.className='mw '+(type==='user'?'u':'a')+(type==='tk'?' tk':'');
   const now=new Date().toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});
-  d.innerHTML=`<div class="mb">${text}</div><div class="mt">${now}</div>`;
+  const bodyHtml=type==='tk'?text:(type==='user'?escHtml(text):mdRender(text));
+  d.innerHTML=`<div class="mb">${bodyHtml}</div><div class="mt">${now}</div>`;
   msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d;
 }
 function sendSug(t){document.getElementById('ci').value=t;sendChat();}
