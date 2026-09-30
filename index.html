@@ -400,7 +400,7 @@ function save(){localStorage.setItem('musaidi_tasks',JSON.stringify(tasks));}
 function renderT(){
   const l=document.getElementById('tlist');
   if(!tasks.length){l.innerHTML='<div style="text-align:center;color:#999;padding:40px;font-size:13px">لا توجد مهام</div>';return;}
-  l.innerHTML=tasks.map(t=>`<div class="ti"><div class="tck ${t.done?'done':''}" onclick="togT(${t.id})">${t.done?'✓':''}</div><div class="tcon"><div class="tit ${t.done?'done':''}">${t.title}</div><div class="tm"><span class="tag tp">${t.project}</span><span class="tag ${t.priority==='high'?'th':t.priority==='mid'?'tmd':'tl'}">${t.priority==='high'?'عالية':t.priority==='mid'?'متوسطة':'منخفضة'}</span></div></div><div class="td" onclick="delT(${t.id})">✕</div></div>`).join('');
+  l.innerHTML=tasks.map(t=>`<div class="ti"><div class="tck ${t.done?'done':''}" onclick="togT(${t.id})">${t.done?'✓':''}</div><div class="tcon"><div class="tit ${t.done?'done':''}">${escHtml(t.title)}</div><div class="tm"><span class="tag tp">${escHtml(t.project)}</span><span class="tag ${t.priority==='high'?'th':t.priority==='mid'?'tmd':'tl'}">${t.priority==='high'?'عالية':t.priority==='mid'?'متوسطة':'منخفضة'}</span></div></div><div class="td" onclick="delT(${t.id})">✕</div></div>`).join('');
 }
 function updS(){
   const tot=tasks.length,dn=tasks.filter(t=>t.done).length,hi=tasks.filter(t=>t.priority==='high'&&!t.done).length;
@@ -478,15 +478,18 @@ function aC(s){let h=0;for(let c of s)h=(h*31+c.charCodeAt(0))&0xffffffff;return
 function gH(m,n){return m.payload?.headers?.find(h=>h.name===n)?.value||'';}
 function fD(d){if(!d)return '';const dt=new Date(d),now=new Date();if(dt.toDateString()===now.toDateString())return dt.toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});return dt.toLocaleDateString('ar',{day:'numeric',month:'short'});}
 function sN(f){return f.replace(/<.*>/,'').replace(/"/g,'').trim()||f.split('@')[0];}
+function escHtml(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function escAttr(s){return escHtml(s);}
 function renderE(){
   selE.clear();document.getElementById('m-del').style.display='none';
   document.getElementById('econt').innerHTML=emails.map(msg=>{
     const fr=gH(msg,'From'),sj=gH(msg,'Subject')||'(بلا موضوع)',dt=fD(gH(msg,'Date'));
     const nm=sN(fr),in_=nm[0]?.toUpperCase()||'?',cl=aC(fr),ur=msg.labelIds?.includes('UNREAD');
-    return `<div class="ei ${ur?'ur':''}" onclick="openE('${msg.id}','${msg._src}')">
-      <div class="eck" onclick="togS(event,'${msg.id}',this)"></div>
-      <div class="av" style="background:${cl}">${in_}</div>
-      <div class="ec"><div class="eh"><div class="ef">${nm}</div><div class="edt">${dt}</div></div><div class="esj">${sj}</div><div class="esn">${msg.snippet||''}</div></div>
+    const eNm=escHtml(nm),eIn=escHtml(in_),eSj=escHtml(sj),eDt=escHtml(dt),eSn=escHtml(msg.snippet||''),eId=escAttr(msg.id),eSrc=escAttr(msg._src);
+    return `<div class="ei ${ur?'ur':''}" onclick="openE('${eId}','${eSrc}')">
+      <div class="eck" onclick="togS(event,'${eId}',this)"></div>
+      <div class="av" style="background:${cl}">${eIn}</div>
+      <div class="ec"><div class="eh"><div class="ef">${eNm}</div><div class="edt">${eDt}</div></div><div class="esj">${eSj}</div><div class="esn">${eSn}</div></div>
       ${ur?'<div class="ud"></div>':''}
     </div>`;
   }).join('')||'<div class="es"><div class="esi">📭</div><p>لا توجد رسائل</p></div>';
@@ -511,7 +514,7 @@ async function openE(id,src){
   document.getElementById('dsubj').textContent=subject;
   document.getElementById('dfrom').textContent=from+' · '+date;
   const be=document.getElementById('dbody');
-  if(body.includes('<')){const ifr=document.createElement('iframe');ifr.srcdoc=body;ifr.style.cssText='width:100%;height:100%;border:none;background:#fff';be.innerHTML='';be.appendChild(ifr);}
+  if(body.includes('<')){const ifr=document.createElement('iframe');ifr.setAttribute('sandbox','');ifr.srcdoc=body;ifr.style.cssText='width:100%;height:100%;border:none;background:#fff';be.innerHTML='';be.appendChild(ifr);}
   else be.textContent=body||'';
   document.getElementById('edet').classList.add('vis');
 }
