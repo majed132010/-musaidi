@@ -269,8 +269,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         <div class="eds" id="dsubj"></div>
         <div class="edf" id="dfrom"></div>
         <div class="eda">
-          <button class="gb" style="color:#fff;border-color:rgba(255,255,255,0.3)" onclick="replyEmail()">↩️ رد</button>
-          <button class="gb" style="color:#ffaaaa;border-color:rgba(255,100,100,0.3)" onclick="delCur()">🗑️ حذف</button>
+          <button class="gb" style="background:#fff;color:#075e54;border-color:#fff;font-weight:600" onclick="replyEmail()">↩️ رد</button>
+          <button class="gb" style="background:#fde8e8;color:#c0392b;border-color:#f5c6c6;font-weight:600" onclick="delCur()">🗑️ حذف</button>
         </div>
       </div>
       <div class="ebody" id="dbody"></div>
@@ -521,16 +521,34 @@ async function openE(id,src){
 function closeED(){document.getElementById('edet').classList.remove('vis');curEid=null;}
 async function delCur(){
   if(!curEid)return;
-  if(curEid.src==='gmail')await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${curEid.id}/trash`,{method:'POST',headers:{Authorization:'Bearer '+gTok}});
-  else await fetch(`https://graph.microsoft.com/v1.0/me/messages/${curEid.id}`,{method:'DELETE',headers:{Authorization:'Bearer '+hmTok}});
+  const subj=document.getElementById('dsubj').textContent;
+  const from=document.getElementById('dfrom').textContent;
+  const ok=await mailConfirm('تأكيد حذف رسالة',[['من',from],['الموضوع',subj]],'نقل إلى المهملات');
+  if(!ok)return;
+  let r;
+  if(curEid.src==='gmail')r=await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${encodeURIComponent(curEid.id)}/trash`,{method:'POST',headers:{Authorization:'Bearer '+gTok}});
+  else r=await fetch(`https://graph.microsoft.com/v1.0/me/messages/${encodeURIComponent(curEid.id)}/move`,{method:'POST',headers:{'Authorization':'Bearer '+hmTok,'Content-Type':'application/json'},body:JSON.stringify({destinationId:'deleteditems'})});
+  if(!r.ok){alert('فشل الحذف ('+r.status+')');return;}
   const eid=curEid.id;closeED();emails=emails.filter(e=>e.id!==eid);renderE();
 }
 async function deleteSelected(){
-  await Promise.all([...selE].map(id=>{
+  const ids=[...selE];
+  if(!ids.length)return;
+  const rows=ids.slice(0,8).map(id=>{const m=emails.find(e=>e.id===id);return m?['رسالة',sN(gH(m,'From'))+' — '+(gH(m,'Subject')||'(بلا موضوع)')]:['رسالة',id];});
+  if(ids.length>8)rows.push(['وغيرها',(ids.length-8)+' رسائل أخرى']);
+  const ok=await mailConfirm('تأكيد حذف '+ids.length+' رسالة',rows,'نقل إلى المهملات');
+  if(!ok)return;
+  const results=await Promise.all(ids.map(id=>{
     const m=emails.find(e=>e.id===id);
-    return m?._src==='gmail'?fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}/trash`,{method:'POST',headers:{Authorization:'Bearer '+gTok}}):fetch(`https://graph.microsoft.com/v1.0/me/messages/${id}`,{method:'DELETE',headers:{Authorization:'Bearer '+hmTok}});
+    if(m&&m._src==='gmail')return fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${encodeURIComponent(id)}/trash`,{method:'POST',headers:{Authorization:'Bearer '+gTok}}).then(r=>({id,ok:r.ok})).catch(()=>({id,ok:false}));
+    return fetch(`https://graph.microsoft.com/v1.0/me/messages/${encodeURIComponent(id)}/move`,{method:'POST',headers:{'Authorization':'Bearer '+hmTok,'Content-Type':'application/json'},body:JSON.stringify({destinationId:'deleteditems'})}).then(r=>({id,ok:r.ok})).catch(()=>({id,ok:false}));
   }));
-  emails=emails.filter(e=>!selE.has(e.id));selE.clear();renderE();document.getElementById('m-del').style.display='none';
+  const done=new Set(results.filter(x=>x.ok).map(x=>x.id));
+  const failed=results.length-done.size;
+  emails=emails.filter(e=>!done.has(e.id));
+  selE.clear();renderE();
+  document.getElementById('m-del').style.display='none';
+  if(failed)alert('تعذر حذف '+failed+' رسالة');
 }
 function replyEmail(){
   const sj=document.getElementById('dsubj').textContent,fr=document.getElementById('dfrom').textContent;
