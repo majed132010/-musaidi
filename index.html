@@ -502,7 +502,7 @@ async function openE(id,src){
     subject=f.payload?.headers?.find(h=>h.name==='Subject')?.value||'(بلا موضوع)';
     from=f.payload?.headers?.find(h=>h.name==='From')?.value||'';
     date=fD(f.payload?.headers?.find(h=>h.name==='Date')?.value);
-    const exB=(p)=>{if(!p)return;if(p.mimeType==='text/plain'&&p.body?.data)body=atob(p.body.data.replace(/-/g,'+').replace(/_/g,'/'));else if(p.mimeType==='text/html'&&p.body?.data&&!body)body=atob(p.body.data.replace(/-/g,'+').replace(/_/g,'/'));if(p.parts)p.parts.forEach(exB);};
+    const exB=(p)=>{if(!p)return;if(p.mimeType==='text/plain'&&p.body?.data)body=mailUtf8(p.body.data);else if(p.mimeType==='text/html'&&p.body?.data&&!body)body=mailUtf8(p.body.data);if(p.parts)p.parts.forEach(exB);};
     exB(f.payload);
     if(f.labelIds?.includes('UNREAD'))fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}/modify`,{method:'POST',headers:{'Authorization':'Bearer '+gTok,'Content-Type':'application/json'},body:JSON.stringify({removeLabelIds:['UNREAD']})});
   }else{
